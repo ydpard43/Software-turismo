@@ -7,10 +7,14 @@
         <span id="title"  class="mx-auto display-4">Reestablecer contraseña</span>
         <br>
         <p id="profile-name" class="profile-name-card"></p>
-        <form class="form-signin" action="{{route('reepass')}}" method="POST">
+        <form class="form-signin" action="{{route('actuap')}}" method="POST">
             @csrf
-        <input type="email" name="email"id="inputusuario" class="form-control" value="{{old('user')}}" placeholder="Digite su correo"  >
+        <input type="text" name="primern"id="inputusuario" class="form-control" value="{{old('user')}}" placeholder="Nueva contraseña"  >
         {!!$errors->first('name','<span>:message</span>')!!}
+        <input type="text" name="segundon" id="inputcontrasena" class="form-control" value="{{old('pass')}}" placeholder="Repetir contraseña" >
+         {{$errors->first('password')}}
+            <br>
+               <input type="text" name="nomu" id="inputcontrasena" class="form-control" value="{{old('pass')}}" placeholder="Nombre de usuario" >
             <br>
          <button class="mx-auto btn btn-primary" style="padding-left: 8%"  type="submit">Enviar</button>
          <br>
