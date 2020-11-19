@@ -4,33 +4,54 @@ font-family: 'Roboto', sans-serif;
 }
 
 .card-container.card {
+    max-width: 600px;
+    padding: 40px 40px;
+    border-radius: 55px;
+}
+.container2 {
     max-width: 400px;
     padding: 40px 40px;
     border-radius: 25px;
 }
-a{
-        margin: 0 auto 10px;
-            align-items: center;
+.login{
+    text-align: center;
+    padding-top: 4%;
 }
-/*
- * Card component
- */
+.forgot{
+    color: black;
+}
+.btnp{
+    display: flex;
+    color: #fff;
+    background-color: #007bff;
+    border-color: transparent;
+    border-radius: 22px;
+    text-align: center;
+    margin-left: 35%;
+    padding-left: 11%;
+    padding-right: 11%;
+}
+a{
+        display: block;
+        align-items: center;
+}
+select{
+border:transparent;
+}
 .card {
     display: flex;
     background-color: #F7F7F7;
-    /* just in case there no content*/
     align-items: center;
-  justify-content: center;
+    justify-content: center;
     padding: 20px 25px 30px;
     margin: 0 auto 25px;
     margin-top: 50px;
-    /* shadows and rounded borders */
 }
 
 .profile-img-card {
-    width: 96px;
-    height: 96px;
-    margin: 0 auto 10px;
+    width: 110px;
+    height: 110px;
+    margin-top: 16px;
     display: block;
     -moz-border-radius: 50%;
     -webkit-border-radius: 50%;
@@ -48,12 +69,24 @@ a{
     min-height: 1em;
 }
 input {
-    border-radius: 25px;
-     display: block;
-    margin-bottom: 10px;
+ border-radius: 25px;
+ display: block;
+ margin-bottom: 10px;
+ margin-right: 4%;
  position: relative;
+border: 3px solid rgba(0,0,0,0.2);
+ background: ligthgray;
+ padding: 0 40px 0 10px;
+ height: 40px;
+ width: 50%;
+}
+.regist{
+    display: flex;
 }
 #title{
 font-size: 40px;
 color: rgba(39,138,181,1);
+}
+.leaflet-container .leaflet-control-attribution a{
+display: contents;
 }

@@ -1,0 +1,121 @@
+.contenedor{
+	position: absolute;
+	z-index: 9999;
+}
+a {
+	text-decoration: none;
+}
+ul{
+	list-style: none;
+	padding: 0;
+}
+/* ----- ----- MAIN ----- ----- */
+main {
+	width: 100%;
+}
+
+main nav {
+	width: 100%;
+	display: flex;
+	margin-bottom: 60px;
+}
+
+main nav .btn-menu {
+	padding-left: 2%;
+	padding-top: 2%;
+	display: inline-block;
+	width: 65px;
+	height: 65px;
+	background: transparent;
+	cursor: pointer;
+	font-size: 28px;
+	margin-right: 20px;
+	transition: .3s ease all;
+
+}
+main nav .btn-menu:hover {
+	color: #828282;
+}
+
+/* ------------------------- */
+/* Pushbars: Estilos Generales */
+/* ------------------------- */
+.pushbar{
+	width: 50%;
+}
+.pushbar .btn-cerrar{
+	text-align: right;
+	background: none;
+	border: transparent;
+}
+.pushbar a{
+ 	display: block;
+ 	padding: 20px 0;
+}
+nav ul{
+	display: none;
+}
+
+.content-select select{
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+.content-select select::-ms-expand {
+    display: none;
+}
+.content-select{
+	max-width: 50%;
+	position: relative;
+	margin-left: 25%;
+	margin-top: 14%;
+	margin-bottom: 30%;
+}
+
+.content-select select{
+	display: inline-block;
+	width: 100%;
+	cursor: pointer;
+  	padding: 7px 10px;
+  	height: 42px;
+  	outline: 0;
+  	border: 0;
+	border-radius: 0;
+	background: #f0f0f0;
+	color: #7b7b7b;
+	font-size: 1em;
+	color: #999;
+	font-family:
+	'Quicksand', sans-serif;
+    border-radius: 12px;
+    position: relative;
+    transition: all 0.25s ease;
+}
+
+.content-select i{
+	position: absolute;
+	right: 20px;
+	top: calc(50% - 13px);
+	width: 16px;
+	height: 16px;
+	display: block;
+	border-left:4px solid black;
+	border-bottom:4px solid black;
+	transform: rotate(-45deg);
+	transition: all 0.25s ease;
+}
+.router{
+font-size: 25px;
+display: block;
+padding-left: 17%;
+padding-top: 10%;
+}
+.access{
+ display: block;
+ text-align: center;
+ padding-top: 20%;
+}
+.access .pausa{
+margin-left: 9%;
+margin-right: 9%;
+}
