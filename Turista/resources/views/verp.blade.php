@@ -9,11 +9,24 @@
     <div class="mx-auto card card-container">
         <span id="title"  class="mx-auto display-3">{{$poi[0]->nomp}}</span>
         <br>
-        {{var_dump($estrellas)}}
         <p id="profile-name" class="profile-name-card"></p>
         <img style='border-radius: 25px;' src="img/{{$poi[0]->id_imagenpoi}}">
         <div style="text-align: center; padding-top: 1%;">
-           <a><img style="width: 7%;" src="img/estrella.png"><img style="width: 7%;" src="img/estrella.png"><img style="width: 7%;" src="img/estrella.png"><img  style="width: 7%;"src="img/estrella.png"><img style="width: 7%;"src="img/estrella.png"></a>
+        	@if($estrellas=='1')
+        	<a><img style="width: 7%;" src="img/estrella.png"></a>
+        	@endif
+        	@if($estrellas=='2')
+        	<a><img style="width: 7%;" src="img/estrella.png"><img style="width: 7%;" src="img/estrella.png"></a>
+        	@endif
+        	@if($estrellas=='3')
+        	<a><img style="width: 7%;" src="img/estrella.png"><img style="width: 7%;" src="img/estrella.png"><img style="width: 7%;" src="img/estrella.png"></a>
+        	@endif
+        	@if($estrellas=='4')
+        	<a><img style="width: 7%;" src="img/estrella.png"><img style="width: 7%;" src="img/estrella.png"><img style="width: 7%;" src="img/estrella.png"><img  style="width: 7%;"src="img/estrella.png"></a>
+        	@endif
+        	@if($estrellas=='5')
+        	<a><img style="width: 7%;" src="img/estrella.png"><img style="width: 7%;" src="img/estrella.png"><img style="width: 7%;" src="img/estrella.png"><img  style="width: 7%;"src="img/estrella.png"><img style="width: 7%;"src="img/estrella.png"></a>
+        	@endif
                     </div>
         <span style="text-align:right; padding-right: 33%; padding-top: 1%; ">Ubicación:{{$poi[0]->nomm}}</span>
         <span style="text-align:right; padding-right: 33%; padding-top: 1%; ">Tipologia:{{$poi[0]->nombre}}</span>
@@ -94,6 +107,11 @@
 				</form>
 				@endif
 				@endif
+				 @if(!(session()->has('nombre')))
+				 <div style="display: block; text-align: center;">
+				 	<i>Para calificar un destino inicia sesión</i>
+				 </div>
+				 @endif
         </div>
 
     </div>
