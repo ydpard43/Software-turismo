@@ -12,6 +12,7 @@
 <link rel="stylesheet" type="text/css" href="{!! asset('css/style.css') !!}" >
 <link rel="stylesheet" type="text/css" href="{!! asset('css/map.css') !!}" >
 <link rel="stylesheet" type="text/css" href="{!! asset('css/nav.css') !!}" >
+<link rel="stylesheet" type="text/css" href="{!! asset('css/lista.css') !!}" >
 
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <title>@yield('title')</title>

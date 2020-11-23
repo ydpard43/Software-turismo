@@ -21,6 +21,7 @@ class login extends Controller
 	 	session(['id' => $consult->id_turista]);
 	 	session(['nombre' => $consult->prnombre]);
 	 	session(['apellido' => $consult->prapellido]);
+	 	session(['alias'=>$consult->alias]);
 	 	return redirect('/');
 	 }
     }
@@ -32,6 +33,15 @@ Return Turista::select('turista.password')
         ->first();
         	//return back()->with('reestablecer','1');
     }
+    public function cerrar()
+{
+		session()->forget('id');
+	 	session()->forget('nombre');
+	 	session()->forget('apellido');
+	 	session()->forget('alias');
+	 	return view('/iniciar');
+
+}
 
 }
 

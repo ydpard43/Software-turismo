@@ -2,7 +2,15 @@ body, html {
     background-color: gray;
 font-family: 'Roboto', sans-serif;
 }
-
+label{ color:black;}
+input[type = "radio"]{ display:none;}
+label:hover{color:orange;}
+label:hover ~ label{color:orange;}
+.clasificacion{
+      direction: rtl;
+      unicode-bidi: bidi-override;
+  }
+  input[type = "radio"]:checked ~ label{color:orange;}
 .card-container.card {
     max-width: 600px;
     padding: 40px 40px;
