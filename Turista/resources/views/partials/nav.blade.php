@@ -14,7 +14,7 @@
 			</div>
 			<nav>
 					@if(session()->has('nombre'))
-				<a href="{{route('listp')}}"><img style="width: 70px; margin-left:13%; "src="img/fotografo.png"></a>
+				<a href="{{route('perfil')}}"><img style="width: 70px; margin-left:13%; "src="img/fotografo.png"></a>
 				@endif
 				<a href="{{route('pois')}}"><img style="width: 50px; margin-left:20%; padding-top:40%;"src="img/marcador.png"></a>
 				<li><a href="#"><img style="width: 50px; margin-left:20%; "src="img/senalizar.png" onclick="mostrar()"></a></li>

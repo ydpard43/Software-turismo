@@ -1,6 +1,10 @@
+@php
+if ((session()->has('nombre'))) {
+return redirect()->to('/')->send();
+}
+@endphp
 @extends('status')
 @section('title','iniciar')
-
 @section('content')
 <div class="mx-auto container2">
     <div class="mx-auto card card-container">
@@ -20,7 +24,7 @@
         <a href="reepass" class="forgot">¿Has olvidado tu contraseña?</a>
                </div>
           <div class="login">
-         <button class="btn btn-primary"  type="submit">Iniciar sesion</button>
+         <button class="btn btn-primary" style="display: block;" type="submit">Iniciar sesion</button>
            </div>
                 <div class="login">
           <a href="{{route('regist')}}" class="text-center">Registrarse</a>

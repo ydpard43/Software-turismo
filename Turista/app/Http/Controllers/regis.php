@@ -22,7 +22,7 @@ copy($ruta,$destino);
       $sga=request('segunda');
       $pas=request('password');
       $email=request('email');
-      $sex='1';
+      $sex=request('sexo');
       $img=$destino;
      $est='1';
 
@@ -34,7 +34,7 @@ copy($ruta,$destino);
      	'alias'=> request('nomu'),
      	'contrasena'=> rtrim(strtr(base64_encode($pas), '+/', '-_'), '='),
      	'sexo'=> $sex,
-     	'imagen'=> $img,
+     	'imagen'=> 'df.jpg',
      	'estado'=> $est
      ]);
      $user=Turista::all();

@@ -1,3 +1,8 @@
+@php
+if ((session()->has('nombre'))) {
+return redirect()->to('/')->send();
+}
+@endphp
 @extends('status')
 @section('title','Registrarse')
 
@@ -48,7 +53,6 @@
            <option value="1">Hombre</option>
          </select>
          </div>
-        <input type="file" name="img" accept="image/*" class="file">
 
         <div class="regist">
          <button class="btnp" type="submit">Enviar</button>
