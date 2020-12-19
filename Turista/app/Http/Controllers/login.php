@@ -17,12 +17,15 @@ class login extends Controller
 	 $pass=request('password');
 	 $pass=rtrim(strtr(base64_encode($pass), '+/', '-_'), '=');
 	 $consult = DB::table('turista')->where('alias', $user)->first();
+	 if($consult){
 	 if ($pass==($consult->contrasena)) {
 	 	session(['id' => $consult->id_turista]);
 	 	session(['nombre' => $consult->prnombre]);
 	 	session(['apellido' => $consult->prapellido]);
 	 	session(['alias'=>$consult->alias]);
 	 	return redirect('/');
+	 } } else { 
+	 	echo "usuario erroneo";
 	 }
     }
         public function viewpass()

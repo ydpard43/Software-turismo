@@ -12,10 +12,10 @@ class regis extends Controller
    //   return ''.$prueba['0']->id_rol;
 
         public function store(){
-$img_user= $_FILES["img"]["name"];
-$ruta=$_FILES["img"]["tmp_name"];
-$destino="img/".$img_user;
-copy($ruta,$destino);
+//$img_user= $_FILES["img"]["name"];
+//$ruta=$_FILES["img"]["tmp_name"];
+//$destino="img/".$img_user;
+//copy($ruta,$destino);
        $prn=request('primern');
        $sgn=request('segundon');
        $pra=request('primera');
@@ -23,7 +23,7 @@ copy($ruta,$destino);
       $pas=request('password');
       $email=request('email');
       $sex=request('sexo');
-      $img=$destino;
+//      $img=$destino;
      $est='1';
 
      Turista::create([
