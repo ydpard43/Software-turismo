@@ -36,7 +36,6 @@
 
                     </div>
                     <div style="text-align: center;">
-                    <a><img style="width: 15%;" src="img/estrella.png"><img style="width: 15%;" src="img/estrella.png"><img style="width: 15%;" src="img/estrella.png"><img  style="width: 15%;"src="img/estrella.png"><img  style="width: 15%;"src="img/estrella.png"></a>
                     </div>
                 </div>
             </div>

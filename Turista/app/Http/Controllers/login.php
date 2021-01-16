@@ -9,14 +9,13 @@ class login extends Controller
 {
     public function store()
     {
-     request()->validate([
-		'name' =>'required|min:1',
-		'password' =>'required|min:1'
-     ]);
+
 	 $user=request('name');
 	 $pass=request('password');
 	 $pass=rtrim(strtr(base64_encode($pass), '+/', '-_'), '=');
 	 $consult = DB::table('turista')->where('alias', $user)->first();
+     var_dump($pass);
+	 var_dump($consult->contrasena);
 	 if($consult){
 	 if ($pass==($consult->contrasena)) {
 	 	session(['id' => $consult->id_turista]);
@@ -24,6 +23,7 @@ class login extends Controller
 	 	session(['apellido' => $consult->prapellido]);
 	 	session(['alias'=>$consult->alias]);
 	 	return redirect('/');
+	 	
 	 } } else { 
 	 	echo "usuario erroneo";
 	 }

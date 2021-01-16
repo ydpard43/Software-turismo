@@ -38,8 +38,11 @@ public function ind($id)
 			$s[0]+=$estrellas->estrellas;
 			$con[0]+=1;
 		}
-		if($s[0]!=0 && $con[0]!=0)
+		if($s[0]!=0 && $con[0]!=0){
 		$prom=round($s[0]/$con[0]);
+	    }else {
+	    $prom=0;
+	    }
 	return view('verp')->with('poi',$consult)->with('opiniones',$consult2)->with('estrellas',$prom);
 }
 public function opin()

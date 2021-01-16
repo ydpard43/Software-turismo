@@ -12,6 +12,9 @@
         <p id="profile-name" class="profile-name-card"></p>
         <img style='border-radius: 25px;' src="img/{{$poi[0]->id_imagenpoi}}">
         <div style="text-align: center; padding-top: 1%;">
+            @if($estrellas=='0')
+            <i>No hay calificaciones</i>
+            @endif
         	@if($estrellas=='1')
         	<a><img style="width: 7%;" src="img/estrella.png"></a>
         	@endif
@@ -29,12 +32,16 @@
         	@endif
                     </div>
         <span style="text-align:right; padding-right: 33%; padding-top: 1%; ">Ubicación:{{$poi[0]->nomm}}</span>
-        <span style="text-align:right; padding-right: 33%; padding-top: 1%; ">Tipologia:{{$poi[0]->nombre}}</span>
-        <span style="text-align:right; padding-right: 33%; padding-top: 1%; ">Descripcion</span>
+        <span style="text-align:right; padding-right: 35%; padding-top: 1%; ">Tipologia:{{$poi[0]->nombre}}</span>
+        <span style="text-align:right; padding-right: 41%; padding-top: 1%; ">Descripcion</span>
         <p>{{$poi[0]->nomm}}</p>
         <div>
-        	<h1>Opiniones</h1>
+        	<h2 style="padding-right: 270px;">Opiniones</h2>
+        @if($estrellas=='0')
+        <i style="padding-right: 270px;">No existe ninguna opinion</i>
+        @endif
          @foreach($opiniones as $op)
+
          @if(($op->id_turista)!=(session('id')))
          <div>
          	<div style="display: grid;">
@@ -57,7 +64,7 @@
           @if($op->estrellas == '1' )
          <img style="width: 4%;" src="img/estrella.png">
          @endif
-     </div>
+     
      	@else
      	        <form action="{{route('aopoi')}}" method="post">
      	        	@php
@@ -83,13 +90,12 @@
      	 @endif
          @endforeach
 
-     </div>
         </div>
         @if((session()->has('nombre')))
         @if($a[0]==0)
         <form action="{{route('insertpoi')}}" method="post">
         	@csrf
-        	<textarea placeholder=" Ingresa tu opinion" name="op" rows="3" style="width: 100%; padding-left: 14px; padding-right: 14px; padding-top: 5px; padding-bottom: 5px;border:1px solid gray; border-radius: 20px;"></textarea>
+        	<textarea placeholder=" Ingresa tu opinion" name="op" rows="3" style="width: 100%; padding-left: 14px; padding-right: 14px; padding-top: 5px; margin-top: 7px; padding-bottom: 5px;border:1px solid gray; border-radius: 20px;"></textarea>
 				  <p class="clasificacion">
 				    <input id="radio1" type="radio" name="estrellas" value="5">
 				    <label style="font-size: 30px;" for="radio1">★</label>
