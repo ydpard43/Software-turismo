@@ -1,4 +1,7 @@
 @extends('status')
+@section('parts')
+@include('routes')
+@endsection
 @section('title','iniciar')
 @section('content')
 

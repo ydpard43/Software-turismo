@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 Route::view('/','home')->name('home');
 Route::view('/crear','crear')->name('crear');
 Route::view('/listr','listr')->name('listr');
-Route::view('/verr','verr')->name('verr');
 Route::view('/actuap','actuap')->name('actuap');
 Route::view('/listp','listp')->name('listp');
 Route::view('/reepass','reepass')->name('reepass');
@@ -20,6 +19,7 @@ Route::view('/rutat','rutat')->name('rutat');
 
 Route::get('/perfil','App\Http\Controllers\actua@verp')->name('perfil');
 Route::get('/nuevar','App\Http\Controllers\ruta@nuevap1')->name('nuevar');
+Route::get('/verr','App\Http\Controllers\ruta@verr')->name('verr');
 Route::view('/iniciar','iniciar')->name('iniciar');
 
 Route::get('verp/{id}','App\Http\Controllers\poi@ind')->name('ver');
@@ -29,6 +29,7 @@ Route::get('salir','App\Http\Controllers\login@cerrar')->name('salir');
 
 Route::post('regist','App\Http\Controllers\regis@store');
 Route::post('actuap','App\Http\Controllers\actua@store');
+Route::post('actuat','App\Http\Controllers\ruta@actuat');
 Route::post('ap','App\Http\Controllers\actua@actuap')->name('ap');
 Route::post('pass','App\Http\Controllers\actua@pass')->name('pass');
 Route::post('reepass','App\Http\Controllers\login@viewpass');
@@ -39,5 +40,6 @@ Route::post('mun','App\Http\Controllers\ruta@nuevap3');
 Route::post('map','App\Http\Controllers\ruta@nuevap3b');
 Route::post('ecu','App\Http\Controllers\ruta@nuevap4');
 Route::post('rutat','App\Http\Controllers\ruta@nuevap5');
+Route::post('/verr','App\Http\Controllers\ruta@verr2')->name('verr');
 
 Route::get('/pois','App\Http\Controllers\poi@consult')->name('pois');

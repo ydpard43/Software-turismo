@@ -1,7 +1,7 @@
 	<div class="contenedor">
 		<main>
 			<nav>
-				<i class="btn-menu" style="margin-left: 14%;" data-pushbar-target="pushbar-menu"><img style="width:30px; height:30px; " src="img/menu.png"></i>
+				<i class="btn-menu" style="margin-left: 14%;" data-pushbar-target="pushbar-menu2"><img style="width:30px; height:30px; " src="img/menu.png"></i>
 			</nav>
 		</main>
 		@if(session()->has('nombre'))
@@ -31,7 +31,7 @@
 				@endif
 			</nav>
 		</div>
-		@if(session()->has('nombre'))
+		@if(!session()->has('nombre'))
 		<div data-pushbar-id="pushbar-menu2" data-pushbar-direction="left">
 			<i data-pushbar-close><img style="width: 20px;" src="img/eliminar.png"></i>
 			<nav>
@@ -41,32 +41,35 @@
 			</div>
 
 			<div class="content-select">
-				<select >
-					<option>Ruta 1</option>
-					<option>Ruta 1</option>
-					<option>Ruta 1</option>
-					<option>Ruta 1</option>
-				</select>
+<select id="r">
+<option value="-1"> Seleccionar</option>
+@foreach($rt as $r)
+<option value="{{$r->id_ruta}}">Ruta {{$r->id_ruta}}</option>
+@endforeach
+</select>
 				<i></i>
 			</div>
 			<div>
 			<div class="router">
-				<span>Porcentaje</span>
-				<span>10%</span>
+				<span style="font-size: 19px;">Porcentaje</span>
+				<span  id="porcent"style="font-size: 19px;">0%</span>
 			</div>
 			<div class="router">
 				<span>Tiempo</span>
-				<span>10 min</span>
+				<div style="display: flex; font-size: 19px;">
+				<input type="text" style="border: none;  width: 15%; padding: 0;background: transparent;" disabled="true"  id="minutes"value="0" /><i style="padding-top: 5px;">min</i>
+<input type="text" style="border: none;   width: 15%; padding: 0;margin-left: 10%; background: transparent;" disabled="true"id="seconds"  value="0" /> <i style="padding-top: 5px;">seg</i>
+			</div>
 			</div>
 			<div class="router">
 				<span>Pois faltantes</span>
-				<span>10</span>
+				<span id="restantes">10</span>
 			</div>
 			</div>
 			<div class="access">
-				<i><img style="width:50px;"src="img/lanzadera.png"></i>
-				<i><img class="pausa" style="width:50px;"src="img/pausa.png"></i>
-				<i><img style="width:50px;"src="img/reset.png"></i>
+				<i><img style="width:50px;"src="img/lanzadera.png" onClick="Start()"></i>
+				<i><img class="pausa" style="width:50px;"src="img/pausa.png" onClick="Stop()"></i>
+				<i><img style="width:50px;"src="img/reset.png" onClick="Reset()"></i>
 			</div>
 			<div style="display: block;text-align: center;margin-top: 35px;">
 				<a style="color:white; padding-left: 9%; padding-right: 9%;" class="btn btn-primary">Ver</a>

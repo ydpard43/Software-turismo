@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
-
+use App\Http\Controllers\Ruta;
 class ruta extends Controller
 {
+    public $n_poi;
+   // public $lista_rutas=new Ruta;
     public function nuevap1()
     {
     	$consult=DB::table('tipologia')
@@ -128,6 +130,9 @@ class ruta extends Controller
 			and poi.id_poi in('.$sitios.')');
         $val;
         $tiempo;
+          $tt=500;
+         $pp=[];
+
         foreach ($consult as $p) {
         	for ($i=0; $i <count($id) ; $i++) { 
         	if($p->id_formula==$id[$i]){
@@ -164,16 +169,202 @@ class ruta extends Controller
         }
 
     }
-
    arsort($resultado);
    $res;
   foreach ($resultado as $key => $value) {
+
   	$res[]=$key;
   }
-  return view('rutat')->with('pun',$res)->with('t',$tiempo);
+  
+  foreach ($res as $key=>$value) {
+ 
+ if ($key==0) {
+ if ($tt-$tiempo[$value]['tiempo']>=0) {
+    $tt=$tt-$tiempo[$value]['tiempo'];
+    $pp[]=$value;
+    $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
+ }
+ }else{
+    $coor2=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
+    $data = file_get_contents('http://0.0.0.0:5000/route/v1/car/'.$coor1.';'.$coor2, null, stream_context_create([
+                'http' => [
+                'protocol_version' => 1.1,
+                'header'           => [
+                'Connection: close',],],]));
+     $data=json_decode($data);
+    if (($tt-round($data->routes[0]->duration/60)-$tiempo[$value]['tiempo'])>=0) {
+    $pp[]=$value;
+    $tt=$tt-round($data->routes[0]->duration/60)-$tiempo[$value]['tiempo'];
+}
+$coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
+
+}
+  }
+  return view('rutat')->with('pun',$pp)->with('t',$tiempo);
     }
     public function nuevap5()
     {
-    	echo "Guayaba";
+    	$sitios=request('pois');
+        $consult=DB::select('select poi.id_poi,poi.tiempoestancia,poi.nombre as pn,poi.coordenaday as cy,poi.coordenadax as cx
+            from poi where poi.id_poi in('.$sitios.')');
+        $poi=explode(",",$sitios);
+        $cd=[];
+        $pois=array();
+        $ban=9999999;
+        $vmin=[];
+        for ($i=0; $i <count($poi); $i++) { 
+        foreach ($consult as $key) {
+        if ($poi[$i]==$key->id_poi) {
+        $cd[]=$key->cy.','.$key->cx;
+        echo " cx ".$key->cx.",".$key->cy." poi ".$key->id_poi;
+        echo "<br>";
+        }
+        }
+        }
+        for($a=0;$a<count($cd);$a++){
+        for ($b=0;$b<count($cd);$b++) { 
+        if ($a==$b) {
+        $pois[$a][$b]=-1;
+        }else{
+        $data = file_get_contents('http://0.0.0.0:5000/route/v1/car/'.$cd[$a].';'.$cd[$b], null, stream_context_create([
+                'http' => [
+                'protocol_version' => 1.1,
+                'header'           => [
+                'Connection: close',],],]));
+        $data=json_decode($data);
+        
+        $pois[$a][$b]=$data->routes[0]->distance; 
     }
+        }
+        
+        }
+      for ($i=0; $i <count($pois) ; $i++) { 
+     for ($j=0; $j <count($pois) ; $j++) { 
+      #  echo $pois[$i][$j].'  '; 
+        if ($i!=$j) {
+        if (bccomp($pois[$i][$j],$ban,10)==-1) {
+            $min=($pois[$i][$j]);
+            $ban=($pois[$i][$j]);
+        }
+       }
+      }
+     
+     $vmin[]=$min;
+    # echo "<br>";
+     $ban=99999999;
+      }
+      #var_dump($vmin);
+      #echo "<br>";
+    for ($i=0; $i <count($pois) ; $i++) { 
+     for ($j=0; $j <count($pois) ; $j++) {
+      if ($i!=$j) {
+        $pois[$i][$j]=($pois[$i][$j])-$vmin[$i];
+      }
+
+     }}
+     $vmin=[];
+           for ($i=0; $i <count($pois) ; $i++) { 
+     for ($j=0; $j <count($pois) ; $j++) { 
+       # echo '    '.$pois[$j][$i].'  '; 
+                if ($j!=$i) {
+        if (bccomp($pois[$j][$i],$ban,10)==-1) {
+            $min=($pois[$j][$i]);
+            $ban=($pois[$j][$i]);
+        }
+       }
+      }
+      $vmin[]=$min;
+      #echo "<br>";
+      $ban=99999999;
+    }
+      #var_dump($vmin);
+      #echo "<br>";
+         for ($i=0; $i <count($pois) ; $i++) { 
+     for ($j=0; $j <count($pois) ; $j++) { 
+       # echo $pois[$j][$i].' ';
+       if ($j!=$i) {
+        $pois[$j][$i]=($pois[$j][$i])-$vmin[$i];
+      }
+      }
+      #echo "<br>";
+    }
+    $a=0;
+    for ($i=0; $i <count($pois) ; $i++) { 
+     for ($j=0; $j <count($pois) ; $j++) { 
+     //   echo $pois[$i][$j].'  '; 
+    if ($pois[$i][$j]==0) {
+   
+         echo $i."  ".$j." ";
+
+     
+        
+
+    }
+      }echo "<br>";
+    }
+
+     $lista_rutas = Array();
+    $poi=Array(16,13,3,8,12,1,10,19,20,5);
+    $matriz=Array(Array(-1,0,5,5,10,10,16,20,22,16),
+                  Array(0,-1,0,0,5,5,11,13,15,11),
+                  Array(5,0,-1,5,5,10,4,20,22,16),
+                  Array(5,0,5,-1,0,10,16,20,22,16),
+                  Array(10,5,5,0,-1,15,18,25,27,21),
+                  Array(9,4,9,9,14,-1,0,4,6,0),
+                  Array(15,10,3,15,17,0,-1,10,12,6),
+                  Array(23,16,23,23,28,8,14,-1,0,6),
+                  Array(25,18,25,25,30,10,16,0,-1,5),
+                  Array(15,10,15,15,20,0,6,2,1,-1));
+    $poi_conectados =Array();
+    $n_poi=count($poi);
+    $conexiones=[];
+    for($i = 0; $i < count($matriz); $i++) {
+    for ($j = 0; $j < count($matriz); $j++) {
+        if ($matriz[$i][$j]!="-1") {                             
+            $conexiones[]=$j;
+            $valor[]=($matriz[$i][$j]);
+        }
+    }
+    if ($i<count($matriz) && $j<count($matriz)) {
+    $poi_conectados[]=Array($j,$matriz[$i][$j]);
+    }
+    
+    }
+
+
+
+            }
+    public function verr()
+    { 
+          $consult=DB::table('ruta')
+          ->select('id_ruta')
+          ->join('turista','ruta.fk_id_turista','=','turista.id_turista')
+          ->orderBy('id_ruta','asc')
+          ->where('turista.id_turista','1')
+          ->get();
+    
+          
+    return view('verr')->with('rt',$consult);
+    }
+    public function verr2()
+    {
+      $id=request('id_ruta');
+      $consult=DB::select('select ruta.id_ruta,ruta.fk_id_turista,ruta.tiempo,ruta.seconds,poi.id_poi,poi.coordenadax,poi.coordenaday,poi.nombre,poi_ruta.estado from ruta,poi_ruta,poi,turista where ruta.fk_id_turista=turista.id_turista and poi_ruta.fk_id_ruta=ruta.id_ruta and poi_ruta.fk_id_poi=poi.id_poi and ruta.id_ruta='.$id.' order by ruta.id_ruta');
+      return $consult;
+    }
+    public function actuat()
+    {
+      $idr=request('id_ruta');
+      $time=request('time');
+      $seconds=request('seconds');
+      $consult=DB::table('ruta')
+      ->where('id_ruta',$idr)
+      ->update(['tiempo'=>$time,'seconds'=>$seconds]);
+      if ($consult) {
+        return $seconds;
+      }
+
+    }
+
+        
 }
