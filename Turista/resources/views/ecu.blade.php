@@ -2,32 +2,55 @@
 @section('title','Nueva ruta')
 
 @section('content')
-<div class="mx-auto container">
-    <div class="mx-auto card card-container">
-        <span id="title"  class="mx-auto display-2">Nueva ruta</span>
-        <br>
-        <p id="profile-name" class="profile-name-card"></p>
-        <span>Ajustar formula</span>
-        <hr>
+<div class="card text-center">
+        <div class="card-body">
+          <h5 class="card-title titulo">Ajustar formula</h5>
         @if(session('status'))
             {{session('status')}}
         @endif
-        <form action="{{route('ecu')}}" method="POST">
+        <form action="{{route('ecu')}}" onsubmit="funcionSubmit(event)" method="POST" name="formulario">
             @csrf
+
         @foreach($f as $pesos)
-        <span>{{$pesos->nombre}}</span>
-        <input type="number"  name="pesos[]" value="{{$pesos->peso}}">
+        <div class="form-outline mb-4">
+        <input type="number" id="form1" class="form-control" onkeypress="return valida(event)" name="pesos[]" value="{{$pesos->peso}}">
+        <label class="form-label" for="form1" >{{$pesos->nombre}} factor:{{$pesos->valormaximo}}</label >
         <input type="hidden" name="id[]"  value="{{$pesos->id_formula}}">
-        @endforeach
-        <hr>
-        <hr>
-        <div style="text-align: right; display: block; width: 100%;">
-         <button type="submit" class="btnp">Siguiente</button>
         </div>
+        @endforeach
+         <button type="submit" class="btn btn-primary btn-block mb-4">Siguiente</button>
         </form>
-        <br>
     </div>
 </div>
-
-
+<!-- MDB -->
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.js"
+></script>
+<script>
+    var app = @json($f);
+    var sum=0;
+    function valida(e) {
+            tecla = (document.all) ? e.keyCode : e.which; 
+            if (tecla==8) return true;
+            else if (tecla==0||tecla==9)  return true;
+           patron =/[0-9\s]/;
+            te = String.fromCharCode(tecla);
+            return patron.test(te); 
+        }
+        function funcionSubmit(event){
+    // esta linea detiene la ejecucion del submit
+    sum=0;
+    event.preventDefault();
+  cantidad = document.getElementsByName("pesos[]");
+for(var i=0;i<cantidad.length;i++){
+sum=sum+(cantidad[i].value*app[i]['valormaximo']);
+    }
+    if (sum==100) {
+      document.formulario.submit();  
+    }else{
+        alert('Los valores no suman 100%');
+    }
+}
+</script>
 @endsection

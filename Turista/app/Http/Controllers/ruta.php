@@ -99,10 +99,19 @@ class ruta extends Controller
 	    session(['sitios' => $sit]);
 		}
               $consult2=DB::table('formula')
-        		 ->select('nombre','peso','id_formula')
+        		 ->select('nombre','peso','id_formula','valormaximo')
         		 ->get();
         return view('ecu')->with('f',$consult2);
-    	}
+    	}else{
+                $consult=DB::table('municipio')
+          ->select('municipio.nombre')
+          ->distinct()
+          ->join('poi','poi.fk_id_municipio','=','municipio.id_municipio')
+          ->orderBy('nombre','asc')
+          ->get();
+      return view('mun')->with('mun',$consult)->with('status','Seleccione uno o mas municipios');
+       
+      }
     }
         public function nuevap3b()
     {
@@ -114,23 +123,24 @@ class ruta extends Controller
 		 	return back()->with('status','Por favor rellene todos los campos');
     	}
         $consult=DB::table('formula')
-        		 ->select('nombre','peso','id_formula')
+        		 ->select('nombre','peso','id_formula','valormaximo')
         		 ->get();
-      return view('ecu')->with('f',$consult);
+    return view('ecu')->with('f',$consult);
     }
     public function nuevap4()
     {
         $sitios=session('sitios');
         $pesos=request('pesos');
         $id=request('id');
-        $consult=DB::select('select poi.id_poi,poi.tiempoestancia,poi.nombre as pn,formula.nombre,formula.id_formula,poi_formula.valor,poi.coordenaday,poi.coordenadax
-			from poi,formula,poi_formula
+        $consult=DB::select('select poi.id_poi,poi.tiempoestancia,poi.nombre as pn,formula.nombre,formula.id_formula,poi_formula.valor,poi.coordenaday,poi.coordenadax,imagenpoi.id_imagenpoi
+			from poi,formula,poi_formula,imagenpoi
 			where poi.id_poi=poi_formula.fk_id_poi
 			and poi_formula.fk_id_formula=formula.id_formula
+        and imagenpoi.fk_id_poi=poi.id_poi
 			and poi.id_poi in('.$sitios.')');
         $val;
         $tiempo;
-          $tt=500;
+          $tt=session('time');
          $pp=[];
 
         foreach ($consult as $p) {
@@ -142,7 +152,8 @@ class ruta extends Controller
         	 'res'=>$pesos[$i]*$p->valor,
         	 'tiempo'=>$p->tiempoestancia,
         	 'coordenadax'=>$p->coordenadax,
-        	 'coordenaday'=>$p->coordenaday
+        	 'coordenaday'=>$p->coordenaday,
+           'img'=>$p->id_imagenpoi
         	);
         	}
         	}
@@ -159,13 +170,16 @@ class ruta extends Controller
             $tiempo[$data['id']]=array('tiempo'=>$data['tiempo'],
         							   'cx'=>$data['coordenadax'],
         							   'cy'=>$data['coordenaday'],
-        							   'nombre'=>$data['nombre']);
+        							   'nombre'=>$data['nombre'],
+                         'img'=>$data['img']);
         }else{
             $resultado[$data['id']] += $data['res'];
             $tiempo[$data['id']]=array('tiempo'=>$data['tiempo'],
         							   'cx'=>$data['coordenadax'],
         							   'cy'=>$data['coordenaday'],
-        							   'nombre'=>$data['nombre']);
+        							   'nombre'=>$data['nombre'],
+                         'img'=>$data['img']
+                       );
         }
 
     }
@@ -344,7 +358,7 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
           ->get();
     
           
-    return view('verr')->with('rt',$consult);
+    return view('home')->with('rt',$consult);
     }
     public function verr2()
     {
@@ -368,3 +382,4 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
 
         
 }
+

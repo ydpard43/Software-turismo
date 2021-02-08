@@ -1,10 +1,9 @@
 @extends('status')
 @section('title','Mi perfil')
 @section('content')
-<div class="mx-auto container">
-    <div class="mx-auto card card-container" style="background: linear-gradient(180deg, rgba(0,215,255,1) 24%, rgba(255,255,255,1) 24%);">
-        <span id="title" style="color: white;" class="mx-auto display-4">Perfil</span>
-        <br>
+<div class="card text-center">
+    <div class="card-body" style="background: linear-gradient(180deg, rgba(0,215,255,1) 30%, rgba(255,255,255,1) 30%); border-radius: 25px;">
+        <h1 id="title" style="color: white;">Perfil</h1>
         @if(session('status'))
         <h4 style="color:blue; ">{{session('status')}}</h4>
         @endif
@@ -14,38 +13,52 @@
         </div>
         <form class="form-signin" action="{{route('ap')}}" method="post" enctype="multipart/form-data" >
             @csrf
-        <div>
-        <span style="margin-right: 49%;">Alias</span><span style="position: absolute;">Correo</span>
+        <div class="row mb-4">
+          <div class="col">
+            <div class="form-outline">
+              <input style="background:#f1f1f1; " required type="text" value="{{$turista->alias}}" id="formu" class="form-control" name="nomu" />
+              <label class="form-label" for="formu">Usuario</label>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-outline">
+              <input style="background:#f1f1f1; " required type="email" value="{{$correo[0]->id_correoturista}}" id="forme" class="form-control" name="email" />
+              <label class="form-label" for="forme">Correo</label>
+            </div>
+          </div>
         </div>
-        <div style="display:flex;">
-        <hr style="width: 45%; margin-left: 0; position: relative;"><hr style="width: 45%; margin-right:0; position: relative;">
+                <div class="row mb-4">
+          <div class="col">
+            <div class="form-outline">
+              <input style="background:#f1f1f1; " required onkeypress="return validate(event)" type="text" value="{{$turista->prnombre}}" id="pn" class="form-control" name="primern" />
+              <label class="form-label" for="pn">1° nombre</label>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-outline">
+              <input style="background:#f1f1f1; " required onkeypress="return validate(event)" type="text"  type="text" id="sn" name="segundon" value="{{$turista->sgnombre}}" class="form-control" />
+              <label class="form-label" for="sn">2° nombre</label>
+            </div>
+          </div>
         </div>
-        <div class="regist">
-        <input type="text" name="nomu" class="" value="{{$turista->alias}}" placeholder="Nombre de usuario" >
-        <input type="email" value="{{$correo[0]->id_correoturista}}" name="email">
+           <div class="row mb-4">
+          <div class="col">
+            <div class="form-outline">
+              <input style="background:#f1f1f1; " required onkeypress="return validate(event)" type="text"  type="text" id="pa" value="{{$turista->prapellido}}" name="primera"class="form-control" />
+              <label class="form-label" for="pa">1° apellido</label>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-outline">
+              <input style="background:#f1f1f1; " required onkeypress="return validate(event)" type="text" type="text" id="sa" value="{{$turista->sgapellido}}" name="segunda" class="form-control" />
+              <label class="form-label" for="sa">2° apellido</label>
+            </div>
+          </div>
         </div>
-         <span>Nombres</span>
-        <hr>
-        <div class="regist">
-        <input type="text" name="primern" value="{{$turista->prnombre}}" placeholder="Nombre"  >
-        <input type="hidden" name="">
-        {!!$errors->first('primern','<span>:message</span>')!!}
-        <input type="text" name="segundon" value="{{$turista->sgnombre}}" placeholder="Segundo nombre" >
-         {{$errors->first('segundon')}}
-         </div>
-         <span>Apellidos</span>
-         <hr>
-         <div class="regist">
-          <input type="text" name="primera" class="" value="{{$turista->prapellido}}" placeholder="Primer apellido"  >
-        {!!$errors->first('primera','<span>:message</span>')!!}
-        <input type="text" name="segunda" class="" value="{{$turista->sgapellido}}" placeholder="Segundo apellido" >
-        {{$errors->first('segunda')}}
-
-        </div>
-         <span>Genero</span>
-        <hr>
-        <div class="regist">
-        <select class="form-control"name="sexo">
+        <div class="row mb-4">
+                  <div class="col">
+            <div class="form-outline">
+        <select class="select" style="width: 100%; "name="sexo">
            <option @if( ($turista->sexo) =='false')
             selected
            @endif
@@ -57,6 +70,8 @@
            value="1">Hombre</option>
          </select>
          </div>
+     </div>
+ </div>
 
 
         <div class="regist">
@@ -66,6 +81,10 @@
             </form>
            </div>
 </div>
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.js"
+></script>
 <script>
 $('#imagen').click(function(event) {
     $('#archivo').click();

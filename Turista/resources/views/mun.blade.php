@@ -2,11 +2,9 @@
 @section('title','Delimitacion')
 
 @section('content')
-<div class="mx-auto container">
-    <div class="mx-auto card card-container">
-        <span id="title"  class="mx-auto display-2">Nueva ruta</span>
-        <br>
-        <p id="profile-name" class="profile-name-card"></p>
+<div class="card presentacion">
+    <div class="card-body">
+        <h2 class="card-title titulo" style="text-align: center;">Nueva ruta</h2>
         <span>Seleccione los municipios</span>
         <hr>
         @if(session('status'))
@@ -16,21 +14,17 @@
             @csrf
         <div id="datos">
         <div style="padding: 14px; border-radius:25px; border:solid #80edff; ">
-           <div class="table-responsive-lg" style="max-height: 100px; overflow-y: auto;
-                       display: inline-block; overflow-x: hidden;">
-            <table class="table">
+           <div class="table-responsive-lg" style="max-height: 230px; overflow-y: auto;
+                        overflow-x: hidden;">
+            <table class="table table-borderless">
                 <thead>
                     <tr>
-                      <th scope="col">Nombre</th>
-                      <th scope="col">Opción</th>
-                      <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($mun as $mn)
                     <tr>
-                      <td scope="col">{{$mn->nombre}}</td>
-                      <td><input style="margin-top: -7px; " type="checkbox" name="mun[]" value="{{$mn->nombre}}"></td>
+                      <td scope="col"><input style="margin-top: -7px; " type="checkbox" name="mun[]" value="{{$mn->nombre}}">  {{$mn->nombre}}</td>
                     </tr>
                      @endforeach
                 </tbody>
@@ -41,8 +35,8 @@
         <br>
         <br>
         <div style="text-align: right; display: block; width: 100%;">
-            <a href="{{route('nuevar')}}">Atras</a>
-            <button type="submit" class="btnp">Siguiente</button>
+            <a class="btn btn-info"href="{{route('nuevar')}}">Atras</a>
+            <button type="submit" class="btn btn-primary">Siguiente</button>
         </div>
         </form>
         <br>

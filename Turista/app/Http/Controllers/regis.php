@@ -23,6 +23,11 @@ class regis extends Controller
       $pas=request('password');
       $email=request('email');
       $sex=request('sexo');
+      if (request('sexo')=='-1') {
+      return back()->with('status','Seleccione un genero');
+      }else if (empty($prn) || empty($sgn) || empty($pra) || empty($sga) || empty($pas) || empty($email)) {
+       return back()->with('status','Por favor rellene todos los campos');
+      }
 //      $img=$destino;
      $est='1';
 
@@ -47,7 +52,7 @@ class regis extends Controller
 
      ]);
 
-    return back()->with('status','Usuario correctamente registrado');
+    return back()->with('statu','Usuario correctamente registrado');
     }
 
 }

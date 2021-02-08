@@ -1,18 +1,6 @@
-.small{
-    padding: 5px;
-}
-
 a{
     text-decoration: none;
 }
-
-.container{
-    width: 90%;
-    max-width: 800px;
-    margin: auto;
-}
-
-/* Header */
 
 header{
     padding: 40px;
@@ -35,10 +23,10 @@ header form{
 }
 
 header .barra-busqueda{
-    width: 70%;
+    width: 100%;
     height: 40px;
     line-height: 40px;
-    background: #fff;
+    background: #f1f1f1;
     padding: 0 20px;
     border-radius: 100px;
     border: none;
@@ -60,52 +48,50 @@ header .categorias a{
 }
 
 header .categorias a.activo{
-    color: #000;
+    color: blue;
 }
+.grid {
+  position: relative;
 
-/* Grid Productos */
-
-.grid{
-    position: relative;
-    width: 100%;
-    opacity: 0;
-    transition: opacity 0.5s linear 1s;
 }
-
-.btn{
-    display: flex;
-    margin-top: 5px;
-    width: 100%;
+.item {
+  display: block;
+  position: absolute;
+  text-align: center;
+  width: 250px;
+  height: 250px;
+  margin-left: 1.5rem;
+  margin-right:auto;
+padding-right: 0;
+padding-left: 1%;
+  z-index: 1;
 }
-
-.grid.imagenes-cargadas{
-    opacity: 1;
+.item.muuri-item-dragging {
+  z-index: 3;
 }
-
-.grid .item{
-    position: absolute;
-    display: block;
-    padding: 0;
-    margin: 10px;
-    width: calc(33.33% - 20px);
+.item.muuri-item-releasing {
+  z-index: 2;
 }
-
-.grid .item-contenido{
-    position: relative;
+.item.muuri-item-hidden {
+  z-index: 0;
 }
-
-.grid .item img{
-    width: 100%;
-    cursor: pointer;
-    vertical-align: top;
-    border-radius: 7px;
+.item-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
-
-@media screen and (max-width: 700px){
-    .grid .item{
-        width: calc(50% - 20px);
-    }
-    header .barra-busqueda{
-        width: 100%;
-    }
+@media only screen and (max-width: 600px) {
+   .item {
+  display: block;
+  position: absolute;
+  text-align: center;
+  width: 250px;
+  height: 250px;
+  margin-left: 2.5rem;
+  margin-right:auto;
+padding-right: 0;
+padding-left: 2.5%;
+  z-index: 1;
+} 
+  }
 }

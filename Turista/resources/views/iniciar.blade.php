@@ -6,30 +6,35 @@ return redirect()->to('/')->send();
 @extends('status')
 @section('title','iniciar')
 @section('content')
-<div class="mx-auto container2">
-    <div class="mx-auto card card-container">
-        <span id="title"  class="mx-auto display-4">Mi Ruta</span>
-        <br>
-        <img id="profile-img" class="profile-img-card" src="{!!asset('img/turista.png')!!}" />
-        <p id="profile-name" class="profile-name-card"></p>
-        <form class="form-signin" action="{{route('iniciar')}}" method="POST">
+    <div class="card text-center" style="margin-top: 2%;">
+        <div class="card-body">
+          <h5 class="card-title titulo">Mi Ruta</h5>
+                <p id="profile-name" class="profile-name-card"><img id="profile-img" class="img-profile" src="{!!asset('img/turista.png')!!}" /></p>
+          <form action="{{route('iniciar')}}" method="POST">
             @csrf
-        <span id="reauth-email" class="reauth-email"></span>
-        <input type="text"style="width: 100%;"  name="name"id="inputusuario"  value="{{old('user')}}" placeholder="Usuario"  >
-        {!!$errors->first('name','<span>:message</span>')!!}
-
-        <input type="password" style="width: 100%;" name="password" id="inputcontrasena"  value="{{old('pass')}}" placeholder="Contraseña" >
-         {{$errors->first('password')}}
-         <div class="login">
-        <a href="reepass" class="forgot">¿Has olvidado tu contraseña?</a>
-               </div>
-          <div class="login">
-         <button class="btn btn-primary" style="display: block;" type="submit">Iniciar sesion</button>
-           </div>
-                <div class="login">
-          <a href="{{route('regist')}}" class="text-center">Registrarse</a>
-          </div>
-            </form>
+            <div class="form-outline mb-4">
+              <input style="background: #f1f1f1" name="name" type="text" value="{{old('user')}}" id="formuser" class="form-control" />
+              <label class="form-label" for="formuser">Usuario</label>
+            </div>
+            <div class="form-outline mb-4">
+              <input style="background: #f1f1f1" name="password" type="password" id="formpass" class="form-control" />
+              <label class="form-label" for="formpass">Contraseña</label>
+            </div>
+  <div class="row mb-4">
+    <div class="col">
+      <a href="{{route('reepass')}}">¿Olvidaste tu Contraseña?</a>
     </div>
-</div>
+  </div>
+            <button type="submit" class="btn btn-primary btn-block mb-4">Inicia Sesión</button>
+            <div class="text-center">
+              <p>No tienes una cuenta? <a href="{{route('regist')}}">Registrate</a></p>
+              
+            </div>
+          </form>
+        </div>
+      </div>
+      <script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.js"
+></script>
 @endsection

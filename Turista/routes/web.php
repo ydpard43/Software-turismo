@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::view('/','home')->name('home');
+//Route::view('/','home')->name('home');
 Route::view('/crear','crear')->name('crear');
 Route::view('/listr','listr')->name('listr');
 Route::view('/actuap','actuap')->name('actuap');
@@ -19,7 +19,8 @@ Route::view('/rutat','rutat')->name('rutat');
 
 Route::get('/perfil','App\Http\Controllers\actua@verp')->name('perfil');
 Route::get('/nuevar','App\Http\Controllers\ruta@nuevap1')->name('nuevar');
-Route::get('/verr','App\Http\Controllers\ruta@verr')->name('verr');
+Route::get('/','App\Http\Controllers\ruta@verr')->name('home');
+//Route::get('/verr','App\Http\Controllers\ruta@verr')->name('verr');
 Route::view('/iniciar','iniciar')->name('iniciar');
 
 Route::get('verp/{id}','App\Http\Controllers\poi@ind')->name('ver');

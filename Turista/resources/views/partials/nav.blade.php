@@ -1,7 +1,7 @@
 	<div class="contenedor">
 		<main>
 			<nav>
-				<i class="btn-menu" style="margin-left: 14%;" data-pushbar-target="pushbar-menu2"><img style="width:30px; height:30px; " src="img/menu.png"></i>
+				<i class="btn-menu" style="margin-left: 14%;" data-pushbar-target="pushbar-menu"><img style="width:30px; height:30px; " src="img/menu.png"></i>
 			</nav>
 		</main>
 		@if(session()->has('nombre'))
@@ -18,7 +18,7 @@
 				@endif
 				<a href="{{route('pois')}}"><img style="width: 50px; margin-left:20%; padding-top:40%;"src="img/marcador.png"></a>
 				<li><a href="#"><img style="width: 50px; margin-left:20%; "src="img/senalizar.png" onclick="mostrar()"></a></li>
-				<ul class="o" id="u1"><li><a href="#"><img style="width: 50px; margin-left:20%; "  src="img/varita.png"></a></li>
+				<ul class="o" id="u1"><li><a href="{{route('nuevar')}}"><img style="width: 50px; margin-left:20%; "  src="img/varita.png"></a></li>
 					@if((session()->has('nombre')))
 				<li><a href="#"><img style="width: 50px; margin-left:20%; "  src="img/configuraciones.png"></a></li>
 				@endif
@@ -31,7 +31,7 @@
 				@endif
 			</nav>
 		</div>
-		@if(!session()->has('nombre'))
+		@if(session()->has('nombre'))
 		<div data-pushbar-id="pushbar-menu2" data-pushbar-direction="left">
 			<i data-pushbar-close><img style="width: 20px;" src="img/eliminar.png"></i>
 			<nav>
@@ -43,9 +43,11 @@
 			<div class="content-select">
 <select id="r">
 <option value="-1"> Seleccionar</option>
+@if(isset($rt))
 @foreach($rt as $r)
 <option value="{{$r->id_ruta}}">Ruta {{$r->id_ruta}}</option>
 @endforeach
+@endif
 </select>
 				<i></i>
 			</div>
@@ -63,7 +65,7 @@
 			</div>
 			<div class="router">
 				<span>Pois faltantes</span>
-				<span id="restantes">10</span>
+				<span id="restantes"></span>
 			</div>
 			</div>
 			<div class="access">

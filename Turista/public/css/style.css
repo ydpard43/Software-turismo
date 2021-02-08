@@ -1,101 +1,60 @@
-body, html {
-    background-color: gray;
-font-family: 'Roboto', sans-serif;
+.card{
+    margin: 10% 25% 25% 25%;
+    box-shadow: 0px 10px 23px 9px rgba(207,205,207,1);
+    border-radius: 25px;
 }
-label{ color:black;}
+
+@media (max-width: 700px) {
+  .card {
+    margin: 10% 5% 25% 5%;
+    box-shadow: 0px 10px 23px 9px rgba(207,205,207,1);
+    border-radius: 25px;
+  }
+}
+
+.card-body{
+    padding: 5%;
+}
+
+.card .titulo{
+    padding: 3%;
+}
+
+.form-control{
+    background: #f1f1f1;
+}
+
+.col .card{
+    margin: 0;
+    border-radius: 5px;
+}
+
+.dropdown-item img{
+    width: 50px;
+}
+
+.presentacion{
+    margin: 2% 25% 2% 25%;
+}
+.clasificacion{
+align-content: center;
+}
+label{ color:#757575;}
 input[type = "radio"]{ display:none;}
 label:hover{color:orange;}
 label:hover ~ label{color:orange;}
 .clasificacion{
       direction: rtl;
       unicode-bidi: bidi-override;
+      text-align: left;
   }
   input[type = "radio"]:checked ~ label{color:orange;}
-.card-container.card {
-    max-width: 600px;
-    padding: 40px 40px;
-    border-radius: 55px;
-}
-.container2 {
-    max-width: 400px;
-    padding: 40px 40px;
-    border-radius: 25px;
-}
-.login{
-    text-align: center;
-    padding-top: 4%;
-}
-.forgot{
-    color: black;
-}
-.btnp{
-    display: flex;
-    color: #fff;
-    background-color: #007bff;
-    border-color: transparent;
-    border-radius: 22px;
-    text-align: center;
-    margin-left: 35%;
-    padding-left: 11%;
-    padding-right: 11%;
-}
-a{
-        display: block;
-        align-items: center;
-}
-select{
-border:transparent;
-}
-.card {
-    display: flex;
-    background-color: #F7F7F7;
-    align-items: center;
-    justify-content: center;
-    padding: 20px 25px 30px;
-    margin: 0 auto 25px;
-    margin-top: 50px;
-}
-
-.profile-img-card {
-    width: 110px;
-    height: 110px;
-    margin-top: 16px;
-    display: block;
-    -moz-border-radius: 50%;
-    -webkit-border-radius: 50%;
-    border-radius: 50%;
-}
-
-/*
- * Form styles
- */
-.profile-name-card {
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    margin: 10px 0 0;
-    min-height: 1em;
-}
-input {
- border-radius: 25px;
- display: block;
- margin-bottom: 10px;
- margin-right: 4%;
- position: relative;
-border: 3px solid rgba(0,0,0,0.2);
- background: ligthgray;
- padding: 0 40px 0 10px;
- height: 40px;
- width: 50%;
-}
-.regist{
-    display: flex;
-}
-#title{
-font-size: 40px;
-color: rgba(39,138,181,1);
-}
-.leaflet-container .leaflet-control-attribution a{
-display: contents;
-}
-
+  .star-act{
+    color: orange;
+  }
+  .opiniones{
+    margin-top: 1rem;
+  }
+  .img-profile{
+    max-width: 30%;
+  }

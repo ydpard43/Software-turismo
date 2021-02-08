@@ -2,13 +2,10 @@
 @section('title','Nueva ruta')
 
 @section('content')
-<div class="mx-auto container">
-    <div class="mx-auto card card-container">
-        <span id="title"  class="mx-auto display-2">Nueva ruta</span>
-        <br>
-        <p id="profile-name" class="profile-name-card"></p>
-        <span>Seleccione las tipologias</span>
-        <hr>
+<div class="card presentacion">
+    <div class="card-body">
+        <h2 class="card-title titulo" style="text-align: center;">Nueva ruta</h2>
+        <h5 style="margin-bottom: 10px;">Seleccione las tipologias</h5>
         @if(session('status'))
             {{session('status')}}
         @endif
@@ -16,21 +13,16 @@
             @csrf
         <div id="datos">
         <div style="padding: 14px; border-radius:25px; border:solid #80edff; ">
-           <div class="table-responsive-lg" style="max-height: 100px; overflow-y: auto;
-                       display: inline-block; overflow-x: hidden;">
-            <table class="table">
+           <div class="table-responsive-lg" style="max-height: 230px; overflow-y: auto;
+                       overflow-x: hidden;">
+            <table class="table table-borderless">
                 <thead>
-                    <tr>
-                      <th scope="col">Nombre</th>
-                      <th scope="col">Opción</th>
-                      <th></th>
-                    </tr>
                 </thead>
                 <tbody>
                     @foreach($tp as $t)
                     <tr>
-                      <td scope="col">{{$t->nombre}}</td>
-                      <td><input style="margin-top: -7px; " type="checkbox" name="tip[]" value="{{$t->nombre}}"></td>
+                      <td><input style="margin-top: -7px; " type="checkbox" name="tip[]" value="{{$t->nombre}}">   {{$t->nombre}}</td>
+                      
                     </tr>
                      @endforeach
                 </tbody>
@@ -41,7 +33,7 @@
         <hr>
          <div style="display: block ruby; text-align: center;">
             <span style="color: #808080;">Tiempo disponible</span>
-            <input type="text" name="time" style="width: 14%; padding-right: 0; padding-left: 0;text-align: center;"  class="" value="{{old('time')}}">
+            <input type="number" name="time" required  min="10" max="500"style="width: 14%; padding-right: 0; padding-left: 0;text-align: center;" onkeypress="return valida(event)" class="" value="{{old('time')}}">
             {!!$errors->first('time','<span>:message</span>')!!}
             <span style="color: #808080;">Min</span>
         </div>
@@ -50,14 +42,21 @@
             <option value="0">Municipios</option>
             <option value="1">En mapa</option>
         </select>
-        <hr>
-        <div style="text-align: right; display: block; width: 100%;">
-         <button type="submit" class="btnp">Siguiente</button>
-        </div>
+<hr>
+         <button type="submit" class="btn btn-primary btn-block mb-4">Siguiente</button>
         </form>
         <br>
     </div>
 </div>
 
-
+<script>
+        function valida(e) {
+            tecla = (document.all) ? e.keyCode : e.which; 
+            if (tecla==8) return true;
+            else if (tecla==0||tecla==9)  return true;
+           patron =/[0-9\s]/;
+            te = String.fromCharCode(tecla);
+            return patron.test(te); 
+        }
+</script>
 @endsection

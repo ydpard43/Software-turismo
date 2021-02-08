@@ -7,60 +7,110 @@ return redirect()->to('/')->send();
 @section('title','Registrarse')
 
 @section('content')
-<div class="mx-auto container">
-    <div class="mx-auto card card-container">
-        <span id="title"  class="mx-auto display-4">Crear una cuenta</span>
-        <br>
-        <p id="profile-name" class="profile-name-card"></p>
-        <form class="form-signin" action="{{route('regist')}}" method="post" enctype="multipart/form-data" >
-            @csrf
+  <div class="card text-center">
+    <div class="card-body">
+      
+      <h5 class="card-title titulo">Crear una Cuenta</h5>
         @if(session('status'))
-        {{session('status')}}
+        <div class="alert alert-warning alert-dismissible fade show" id="myAlert" role="alert">
+            <strong>{{session('status')}}</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" onclick="cerrar()" aria-label="Close"></button>
+        </div>
         @endif
-        <span>Nombres</span>
-        <hr>
-        <div class="regist">
-        <input type="text" name="nomu" class="" value="{{old('pass')}}" placeholder="Nombre de usuario" >
+                @if(session('statu'))
+        <div class="alert alert-success alert-dismissible fade show" id="myAlert" role="alert">
+            <strong>{{session('statu')}}</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" onclick="cerrar()" aria-label="Close"></button>
         </div>
-        <div class="regist">
-        <input type="text" name="primern" value="{{old('primern')}}" placeholder="Nombre"  >
-        <input type="hidden" name="">
-        {!!$errors->first('primern','<span>:message</span>')!!}
-        <input type="text" name="segundon" value="{{old('segundon')}}" placeholder="Segundo nombre" >
-         {{$errors->first('segundon')}}
-         </div>
-         <span>Apellidos</span>
-         <hr>
-         <div class="regist">
-          <input type="text" name="primera" class="" value="{{old('primera')}}" placeholder="Primer apellido"  >
-        {!!$errors->first('primera','<span>:message</span>')!!}
-        <input type="text" name="segunda" class="" value="{{old('segunda')}}" placeholder="Segundo apellido" >
-        {{$errors->first('segunda')}}
+        @endif
+      <form action="{{route('regist')}}" method="post">
+        @csrf
+        <div class="row mb-4">
+          <div class="col">
+            <div class="form-outline">
+              <input style="background:#f1f1f1; " required type="text" value="{{old('nomu')}}" id="formu" class="form-control" name="nomu" />
+              <label class="form-label" for="formu">Usuario</label>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-outline">
+              <input style="background:#f1f1f1; " required type="email" value="{{old('email')}}" id="forme" class="form-control" name="email" />
+              <label class="form-label" for="forme">Correo</label>
+            </div>
+          </div>
         </div>
-        <span>Contraseña</span>
-        <hr>
-         <div class="regist">
-          <input type="password" name="password"  class="" value="{{old('password')}}" placeholder="Contraseña"  >
-        {!!$errors->first('password','<span>:message</span>')!!}
-        <input type="password" name="password2"  value="{{old('password2')}}" placeholder="Repetir Contraseña" >
-        {{$errors->first('password2')}}
+
+        <div class="row mb-4">
+          <div class="col">
+            <div class="form-outline">
+              <input style="background:#f1f1f1; " required onkeypress="return validate(event)" type="text" value="{{old('primern')}}" id="pn" class="form-control" name="primern" />
+              <label class="form-label" for="pn">1° nombre</label>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-outline">
+              <input style="background:#f1f1f1; " required onkeypress="return validate(event)" type="text" value="{{old('primern')}}" type="text" id="sn" name="segundon" value="{{old('segundon')}}" class="form-control" />
+              <label class="form-label" for="sn">2° nombre</label>
+            </div>
+          </div>
         </div>
-        <hr>
-        <div class="regist">
-        <input type="email" name="email">
-        <select class="form-control"name="sexo">
+
+        <div class="row mb-4">
+          <div class="col">
+            <div class="form-outline">
+              <input style="background:#f1f1f1; " required onkeypress="return validate(event)" type="text" value="{{old('primern')}}" type="text" id="pa" value="{{old('primera')}}" name="primera"class="form-control" />
+              <label class="form-label" for="pa">1° apellido</label>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-outline">
+              <input style="background:#f1f1f1; " required onkeypress="return validate(event)" type="text" value="{{old('primern')}}"type="text" id="sa" value="{{old('segunda')}}" name="segunda" class="form-control" />
+              <label class="form-label" for="sa">2° apellido</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mb-4">
+          <div class="col">
+            <div class="form-outline">
+              <input style="background:#f1f1f1; " required value="{{old('password')}}" type="password" id="pass1" class="form-control" name="password" />
+              <label class="form-label" for="pass1">Contraseña</label>
+            </div>
+          </div>
+          <div class="col">
+            <div class="form-outline">
+            <select  style="width: 100%;" id="sexo" required class="select"name="sexo">
+            <option selected value="-1">Genero</option>
            <option value="0">Mujer</option>
            <option value="1">Hombre</option>
          </select>
-         </div>
-
-        <div class="regist">
-         <button class="btnp" type="submit">Enviar</button>
+            </div>
+          </div>
         </div>
-        <br>
-          <a href="{{route('iniciar')}}" class="text-center">Iniciar sesion</a>
-            </form>
+        <button type="submit" class="btn btn-primary btn-block mb-4">Enviar</button>
+        <div class="text-center">
+          <p>Ya tienes una cuenta? <a href="{{route('iniciar')}}">Inicia Sesión</a></p>
+          
+        </div>
+      </form>
     </div>
-</div>
+  </div>
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.js"
+></script>
+<script>
+    function validate(e) {
+            tecla = (document.all) ? e.keyCode : e.which; 
+            if (tecla==8) return true;
+            else if (tecla==0||tecla==9)  return true;
+           patron =/^[A-Z]+$/i;
+            te = String.fromCharCode(tecla);
+            return patron.test(te); 
+        }
+   function cerrar(){
+    $('#myAlert').hide();
+   }
 
+</script>
 @endsection

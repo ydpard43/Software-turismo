@@ -102,4 +102,4 @@ L.easyButton('<img src="img/enviar.png" style="width:15px;">', function(btn, map
 $('#pois').val(sitios);
 document.formulario.submit();
 }).addTo(map);
-  console.clear();
+  console.clear(); 
