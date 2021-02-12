@@ -4,7 +4,8 @@
  	 var sitios=[];
  	 var radio;
  	 for (var i = 0; i < app.length; i++) {
- 	 L.marker([app[i]['coordenadax'],app[i]['coordenaday']],{draggable: false}).bindPopup("<h1>"+app[i]['nombre']+"</h1><p>Ni idea de que poner aqui.</p>",estiloPopup).addTo(map);
+ 	 L.marker([app[i]['coordenadax'],app[i]['coordenaday']],{draggable: false})
+   .bindPopup("<h1 style='text-align:center;'>"+app[i]['nombre']+"</h1><p><img style='width:100%;' src='img/"+app[i]['img']+"'></p>",estiloPopup).addTo(map);
  	 }
 
  map.on(L.Draw.Event.CREATED, function (e) {

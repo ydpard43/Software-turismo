@@ -7,8 +7,6 @@ use DB;
 use App\Http\Controllers\Ruta;
 class ruta extends Controller
 {
-    public $n_poi;
-   // public $lista_rutas=new Ruta;
     public function nuevap1()
     {
     	$consult=DB::table('tipologia')
@@ -42,10 +40,11 @@ class ruta extends Controller
 					->get();
     	return view('mun')->with('mun',$consult);
     	}else if ($d=='1') {
-    		$consult=DB::select("select poi.id_poi,poi.nombre,string_agg(tipologia.nombre,',') as tipologia ,poi.coordenadax,poi.coordenaday
-				from poi,poi_tipologia,tipologia 
+    		$consult=DB::select("select poi.id_poi,poi.nombre,string_agg(tipologia.nombre,',') as tipologia ,poi.coordenadax,poi.coordenaday,max(imagenpoi.id_imagenpoi) as img
+				from poi,poi_tipologia,tipologia,imagenpoi 
 				where poi.id_poi=poi_tipologia.fk_id_poi 
 				and poi_tipologia.fk_id_tipologia=tipologia.id_tipologia
+        and imagenpoi.fk_id_poi=poi.id_poi
 				group by poi.id_poi
 				order by poi.id_poi asc");
     		$s;

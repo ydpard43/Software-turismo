@@ -9,6 +9,12 @@ return redirect()->to('/')->send();
     <div class="card text-center" style="margin-top: 2%;">
         <div class="card-body">
           <h5 class="card-title titulo">Mi Ruta</h5>
+                  @if(session('status'))
+        <div class="alert alert-warning alert-dismissible fade show" id="myAlert" role="alert">
+            <strong>{{session('status')}}</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" onclick="cerrar()" aria-label="Close"></button>
+        </div>
+        @endif
                 <p id="profile-name" class="profile-name-card"><img id="profile-img" class="img-profile" src="{!!asset('img/turista.png')!!}" /></p>
           <form action="{{route('iniciar')}}" method="POST">
             @csrf
@@ -37,4 +43,10 @@ return redirect()->to('/')->send();
   type="text/javascript"
   src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.js"
 ></script>
+<script>
+     function cerrar(){
+    $('#myAlert').hide();
+   }
+
+</script>
 @endsection

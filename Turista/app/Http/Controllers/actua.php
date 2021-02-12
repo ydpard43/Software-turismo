@@ -13,7 +13,7 @@ class actua extends Controller
  		$consult2= DB::table('correoturista')->select('id_correoturista')->where('fk_id_turista',session('id'))->get();
  			return view('verpp')->with('turista',$consult)->with('correo',$consult2);
  		}else{
- 			echo "Que hace por aca";
+ 			return back();
  		}
  }
  public function actuap()
