@@ -4,9 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
-use App\Http\Controllers\Ruta;
+
 class ruta extends Controller
 {
+  public $poi_conectados;
+  public $lista_rutas;
+    public $n_poi=0;
+    public $poi;
+    public $matriz ;
+    public $contador=1;
+   
     public function nuevap1()
     {
     	$consult=DB::table('tipologia')
@@ -229,7 +236,7 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
         foreach ($consult as $key) {
         if ($poi[$i]==$key->id_poi) {
         $cd[]=$key->cy.','.$key->cx;
-        echo " cx ".$key->cx.",".$key->cy." poi ".$key->id_poi;
+        //echo " cx ".$key->cx.",".$key->cy." poi ".$key->id_poi;
         echo "<br>";
         }
         }
@@ -306,47 +313,124 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
      for ($j=0; $j <count($pois) ; $j++) { 
      //   echo $pois[$i][$j].'  '; 
     if ($pois[$i][$j]==0) {
-   
-         echo $i."  ".$j." ";
-
-     
-        
+//         echo $i."  ".$j." ";        
 
     }
       }echo "<br>";
     }
-
-     $lista_rutas = Array();
-    $poi=Array(16,13,3,8,12,1,10,19,20,5);
-    $matriz=Array(Array(-1,0,5,5,10,10,16,20,22,16),
-                  Array(0,-1,0,0,5,5,11,13,15,11),
-                  Array(5,0,-1,5,5,10,4,20,22,16),
-                  Array(5,0,5,-1,0,10,16,20,22,16),
-                  Array(10,5,5,0,-1,15,18,25,27,21),
-                  Array(9,4,9,9,14,-1,0,4,6,0),
-                  Array(15,10,3,15,17,0,-1,10,12,6),
-                  Array(23,16,23,23,28,8,14,-1,0,6),
-                  Array(25,18,25,25,30,10,16,0,-1,5),
-                  Array(15,10,15,15,20,0,6,2,1,-1));
-    $poi_conectados =Array();
-    $n_poi=count($poi);
-    $conexiones=[];
-    for($i = 0; $i < count($matriz); $i++) {
-    for ($j = 0; $j < count($matriz); $j++) {
-        if ($matriz[$i][$j]!="-1") {                             
-            $conexiones[]=$j;
-            $valor[]=($matriz[$i][$j]);
+  $this->lista_rutas[] = new route();
+  $this->n_poi=7;
+  $this->poi=Array("Momias ","Casona Coburgo ","Paramo del Sumapaz ","Museo arqueologico ","Casona Novillero ","Casona Balmoral ","Casona Tulipana ");
+  $this->matriz=Array(Array("-1","0.9","0","-1","0","1.6","0.4"),
+                      Array("34.65","-1","-1","0","2.05","0.15","0"),
+                      Array("0","-1","-1","25.45","27.7","30.6","30"),
+                      Array("36.4","0","-1","-1","2.5","1.4","0.6"),
+                      Array("32.2","0.5","-1","0.95","-1","0","0"),
+                      Array("35.2","0","-1","1.25","1.4","-1","0.2"),
+                      Array("34.14","0","-1","0.6","1.55","0.35","-1")); 
+    $this->poi_conectados[] = new Conexion(); 
+    for($i = 0; $i < count($this->matriz); $i++) {
+            $poi_c = new Conexion();
+            for ($j = 0; $j < count($this->matriz); $j++) {
+                if ($this->matriz[$i][$j]!="-1") {                             //Se añaden las columnas de los puntos de interes mas eficientes en pos_admitidas.
+                    $poi_c->setConexiones($j);
+                    $poi_c->setValor($this->matriz[$i][$j]);
+                }
+            }
+            $this->poi_conectados[]=($poi_c);
         }
-    }
-    if ($i<count($matriz) && $j<count($matriz)) {
-    $poi_conectados[]=Array($j,$matriz[$i][$j]);
-    }
-    
-    }
-
-
+        
+       // var_export($this->poi_conectados);
+         $this->formar_posi($x=Array(),$y=Array(), 0, "0",1);
+     //    $this->mostrar_rutas();
+      //   $this->rutas_aptas();
 
             }
+   public function formar_posi($recorrido,$valor,$poi_anterior,$val_anterior,$a)
+    {
+        $recorrido[]=$poi_anterior;                            //Se agrega el POI siguiente al recorrido.
+        $valor[]=$val_anterior;
+          // echo $poi_anterior." ".$this->contador;   
+         foreach ($recorrido as $key => $value) {
+         echo $value."  ";
+         }
+             echo "<br>";
+        foreach ($valor as $key => $value) {
+       // echo $value."  ";
+         }
+             echo "<br>";
+     echo "[".$this->contador."]";
+           $this->contador= $this->contador+1;
+           // var_dump($val_anterior);
+             echo "<br>";
+        if(count($recorrido)==$this->n_poi){
+            $res[]=0;
+            $r = new route();
+            foreach ($recorrido as $iterador=>$key){
+                $r->setRuta($this->poi[$iterador]);                //Guarda las rutas validas en el objeto r.
+            }
+            foreach ($valor as $iterador=>$key) {
+                $res[] = $iterador;
+                $r->setPuntaje($iterador);
+            }
+            $r->setRes($res);
+            $this->lista_rutas[]=$r;
+  
+        }else{
+         $ct=count($this->poi_conectados[$a]->getConexiones());
+        for ($i=0; $i <$ct ; $i++) { 
+
+         if (!(in_array($this->poi_conectados[$a]->getConexiones()[$i],$recorrido))) {
+                
+              if ($i==$ct-1) {
+                 $this->formar_posi($reco=unserialize(serialize($recorrido)),$val=unserialize(serialize($valor)),$this->poi_conectados[$a]->getConexiones()[$i],$this->poi_conectados[$a]->getValor()[$i],$a);
+              }else if($i!=$ct-1){
+                    $this->formar_posi($reco=unserialize(serialize($recorrido)),$val=unserialize(serialize($valor)),$this->poi_conectados[$a]->getConexiones()[$i],$this->poi_conectados[$a]->getValor()[$i],$a+1);}
+           }
+          
+          }
+
+          }
+           
+        echo "<br>";
+         }
+        
+
+        
+      
+    
+        public function mostrar_rutas(){
+        $reco="Rutas validas";
+        foreach($this->lista_rutas as $iterador_rutas){
+          echo var_dump($iterador_rutas->getRuta());
+          echo "<br>otro<br>";
+          //  $reco=$reco."\n".($iterador_rutas->getRuta()." Valor: ".$iterador_rutas->getPuntaje()." Resultado: ".$iterador_rutas->getRes());                  //Imprime las rutas validas/optimas con su valor.
+        }
+      // echo $reco;
+    }
+
+      public function rutas_aptas(){
+        $res_ant=9999;
+        $index=[];
+        $cont=0;
+        foreach($this->lista_rutas as $iterador_rutas){
+            if(($res_ant<=>$iterador_rutas->getRes())==1){
+                $index=[];
+                $index[]=$cont;
+                $res_ant=$iterador_rutas->getRes();
+            }else if(($res_ant<=>$iterador_rutas->getRes())==0){
+                $index[]=$cont;
+            }
+            $cont++;
+        }
+        $ruta="\nRutas más aptas:";
+        foreach ($index as $iterador) {
+          var_dump($this->lista_rutas[2]->getRuta());
+           // $ruta=$ruta."\n".($this->lista_rutas[$iterador]->getRuta()."Valor: ".$this->lista_rutas[$iterador]->getRes());
+        }
+        echo ($ruta);
+    }
+
     public function verr()
     { 
           $consult=DB::table('ruta')
@@ -380,5 +464,54 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
     }
 
         
+}
+class route{
+    private $ruta =array();
+    private $puntaje = array();
+    private $res;
+
+  public function getRes() {
+        return $this->res;
+    }
+
+    public function setRes($res) {
+        $this->res = $res;
+    }
+
+    public function getRuta() {
+        return $this->ruta;
+    }
+
+    public function setRuta($ruta) {
+        $this->ruta[]=$ruta;
+    }
+
+    public function getPuntaje() {
+        return $this->puntaje;
+    }
+
+    public function setPuntaje($puntaje) {
+        $this->puntaje[]=($puntaje);
+    }
+}
+class Conexion {
+    private  $conexiones = array();
+    private $valor = array();
+
+    public function getValor() {
+        return $this->valor;
+    }
+
+    public function setValor($valor) {
+        $this->valor[]=$valor;
+    }
+
+    public function getConexiones() {
+        return $this->conexiones;
+    }
+
+    public function setConexiones($conexiones) {
+        $this->conexiones[]=$conexiones;
+    }
 }
 

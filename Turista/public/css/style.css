@@ -58,3 +58,6 @@ label:hover ~ label{color:orange;}
   .img-profile{
     max-width: 30%;
   }
+  .leaflet-popup-content {
+   text-align: center;
+}
