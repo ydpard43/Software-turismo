@@ -8,7 +8,7 @@
  @endphp
  <div class="card presentacion">
         <img
-          src="../img/{{$poi[0]->id_imagenpoi}}"
+          src="../img/{{$poi[0]->imagen}}"
           class="card-img-top"
           alt="..."
           style="width: 100%;"

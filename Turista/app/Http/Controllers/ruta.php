@@ -48,11 +48,10 @@ class ruta extends Controller
 					->get();
     	return view('mun')->with('mun',$consult);
     	}else if ($d=='1') {
-    		$consult=DB::select("select poi.id_poi,poi.nombre,string_agg(tipologia.nombre,',') as tipologia ,poi.coordenadax,poi.coordenaday,max(imagenpoi.id_imagenpoi) as img
-				from poi,poi_tipologia,tipologia,imagenpoi 
+    		$consult=DB::select("select poi.id_poi,poi.nombre,string_agg(tipologia.nombre,',') as tipologia ,poi.coordenadax,poi.coordenaday,imagen as img
+				from poi,poi_tipologia,tipologia
 				where poi.id_poi=poi_tipologia.fk_id_poi 
 				and poi_tipologia.fk_id_tipologia=tipologia.id_tipologia
-        and imagenpoi.fk_id_poi=poi.id_poi
 				group by poi.id_poi
 				order by poi.id_poi asc");
     		$s;
@@ -141,11 +140,10 @@ class ruta extends Controller
         $id=request('id');
          $tipo="'".implode("','",session('tip'))."'";
          $vtp;
-        $consult=DB::select('select poi.id_poi,poi.tiempoestancia,poi.nombre as pn,formula.nombre,formula.id_formula,poi_formula.valor,poi.coordenaday,poi.coordenadax,imagenpoi.id_imagenpoi
-			from poi,formula,poi_formula,imagenpoi
+        $consult=DB::select('select poi.id_poi,poi.tiempoestancia,poi.nombre as pn,formula.nombre,formula.id_formula,poi_formula.valor,poi.coordenaday,poi.coordenadax,imagen
+			from poi,formula,poi_formula
 			where poi.id_poi=poi_formula.fk_id_poi
 			and poi_formula.fk_id_formula=formula.id_formula
-        and imagenpoi.fk_id_poi=poi.id_poi
 			and poi.id_poi in('.$sitios.')');
         $consult20=DB::select('select poi.id_poi,count(tipologia.nombre) as t
 from poi,tipologia,poi_tipologia
@@ -172,7 +170,7 @@ where poi.id_poi in('.$sitios.')
         	 'tiempo'=>$p->tiempoestancia,
         	 'coordenadax'=>$p->coordenadax,
         	 'coordenaday'=>$p->coordenaday,
-           'img'=>$p->id_imagenpoi
+           'img'=>$p->imagen
         	);
         	}
         	}
@@ -347,9 +345,8 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
   public function nuevap6()
   {
     $sitios=request('indice');
-      $consult=DB::select('select poi.id_poi,poi.tiempoestancia,poi.nombre as pn,poi.coordenaday as cy,poi.coordenadax as cx,imagenpoi.id_imagenpoi as img
-            from poi,imagenpoi where poi.id_poi in('.$sitios.')
-            and imagenpoi.fk_id_poi=poi.id_poi'
+      $consult=DB::select('select poi.id_poi,poi.tiempoestancia,poi.nombre as pn,poi.coordenaday as cy,poi.coordenadax as cx,imagen as img
+            from poi where poi.id_poi in('.$sitios.')'
             );
        $poi=explode(",",$sitios);
        $sum=0;

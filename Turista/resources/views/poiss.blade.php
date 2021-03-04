@@ -25,7 +25,7 @@
                 <div class="card">
                      <a style="color: #4f4f4f;" href="{{route('ver',$p->nomp)}}">
                   <img
-                    src="img/{{$p->id_imagenpoi}}"
+                    src="img/{{$p->imagen}}"
                     class="card-img-top"
                     alt="..."
                   />

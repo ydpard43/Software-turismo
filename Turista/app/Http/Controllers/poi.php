@@ -10,9 +10,8 @@ class poi extends Controller
 public function consult()
 {
 	$consult = DB::table('poi')
-					->select('poi.nombre as nomp','municipio.nombre as nomm','imagenpoi.id_imagenpoi')
+					->select('poi.nombre as nomp','municipio.nombre as nomm','imagen')
 					->join('municipio','municipio.id_municipio','=','poi.fk_id_municipio')
-					->join('imagenpoi','imagenpoi.fk_id_poi','=','poi.id_poi')
 					->orderBy('poi.nombre','asc')
 					->get();
 	$consult2=DB::table('municipio')
@@ -23,7 +22,8 @@ public function consult()
 }
 public function ind($id)
 {
-		$consult = DB::select("select poi.nombre as nomp,poi.id_poi,municipio.nombre as nomm,imagenpoi.id_imagenpoi,tipologia.nombre,poi.descripcion from poi,municipio,imagenpoi,tipologia,poi_tipologia where poi.nombre='".$id."' and municipio.id_municipio=poi.fk_id_municipio and imagenpoi.fk_id_poi=poi.id_poi and poi.id_poi=poi_tipologia.fk_id_poi and poi_tipologia.fk_id_tipologia=tipologia.id_tipologia");
+		$consult = DB::select("select poi.nombre as nomp,poi.id_poi,municipio.nombre as nomm,imagen,tipologia.nombre,poi.descripcion from poi,municipio,tipologia,poi_tipologia where poi.nombre='".$id."' and municipio.id_municipio=poi.fk_id_municipio 
+			and poi.id_poi=poi_tipologia.fk_id_poi and poi_tipologia.fk_id_tipologia=tipologia.id_tipologia");
 		$consult2=DB::table('poi_turista')
 						->select('poi_turista.opinion','poi_turista.estrellas','turista.alias','turista.id_turista')
 						->join('turista','turista.id_turista','=','poi_turista.fk_id_turista')
