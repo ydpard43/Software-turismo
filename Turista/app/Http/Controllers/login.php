@@ -34,8 +34,8 @@ class login extends Controller
         public function viewpass()
     {
       $email=request('email');
-$consult=DB::table('correoturista')
-        ->where('id_correoturista', $email)
+$consult=Turista::select('*')
+        ->where('correo', $email)
         ->get();
         return $consult;
     }
@@ -58,8 +58,8 @@ public function reestablecer()
 public function cambiar()
 {
 	      $email=request('email');
-$consult=DB::table('correoturista')
-        ->where('id_correoturista', $email)
+$consult=Turista::select('correo')
+        ->where('correo', $email)
         ->get();
 if ($consult) {
 	$pass=rtrim(strtr(base64_encode(request('pass')), '+/', '-_'), '=');

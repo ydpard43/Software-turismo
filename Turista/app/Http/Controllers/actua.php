@@ -10,8 +10,7 @@ class actua extends Controller
  {
  	if(session()->has('id')){
  		$consult= DB::table('turista')->where('id_turista', session('id'))->first();
- 		$consult2= DB::table('correoturista')->select('id_correoturista')->where('fk_id_turista',session('id'))->get();
- 			return view('verpp')->with('turista',$consult)->with('correo',$consult2);
+ 			return view('verpp')->with('turista',$consult);
  		}else{
  			return back();
  		}
@@ -25,6 +24,17 @@ class actua extends Controller
     $email=request('email');
     $alias=request('nomu');
     $sexo=request('sexo');
+    $img_user= $_FILES["img"]["name"];
+$ruta=$_FILES["img"]["tmp_name"];
+$destino="img/".$img_user;
+if (!empty($ruta)) {
+	copy($ruta,$destino);
+	$img=$img_user;
+}else{
+  $img='df.jpg';
+}
+
+ 
  	$consult= DB::table('turista')
  				->where('id_turista',session('id'))
  				->update(['alias'=>$alias,
@@ -33,12 +43,26 @@ class actua extends Controller
  					'prapellido'=>$pra,
  					'sgapellido'=>$sga,
  					'sexo'=>$sexo,
- 					'imagen'=>'df.jpg'
+ 					'imagen'=>$img,
+ 					'correo'=>$email
  				]);
  				return back()->with('status','Usuario actualizado correctamente');
  }
   public function actuapc()
  {
- 	echo "contraseña";
+ 	$p=request('pass');
+ 	$p2=request('pass2');
+ 	$consult= DB::table('turista')->where('id_turista', session('id'))->first();
+ 	$pass=rtrim(strtr(base64_encode($p), '+/', '-_'), '=');
+ 	$pass2=rtrim(strtr(base64_encode($p2), '+/', '-_'), '=');
+ 	if ($consult->contrasena==$pass) {
+ 		$consult= DB::table('turista')
+ 				->where('id_turista',session('id'))
+ 				->update(['contrasena'=>$pass2
+ 				]);
+ 				return back()->with('status','Usuario actualizado correctamente');
+ 	}else{
+ 		return back()->with('status','La contraseña actual no es valida');
+ 	}
  }
 }

@@ -8,14 +8,7 @@ use Illuminate\Http\Request;
 
 class regis extends Controller
 {
- //	$prueba=Rol::orderBy('id_rol','DESC')->get();
-   //   return ''.$prueba['0']->id_rol;
-
-        public function store(){
-//$img_user= $_FILES["img"]["name"];
-//$ruta=$_FILES["img"]["tmp_name"];
-//$destino="img/".$img_user;
-//copy($ruta,$destino);
+  public function store(){
        $prn=request('primern');
        $sgn=request('segundon');
        $pra=request('primera');
@@ -28,9 +21,6 @@ class regis extends Controller
       }else if (empty($prn) || empty($sgn) || empty($pra) || empty($sga) || empty($pas) || empty($email)) {
        return back()->with('status','Por favor rellene todos los campos');
       }
-//      $img=$destino;
-     $est='1';
-
      Turista::create([
      	'prnombre'=> $prn,
      	'sgnombre'=> $sgn,
@@ -40,18 +30,9 @@ class regis extends Controller
      	'contrasena'=> rtrim(strtr(base64_encode($pas), '+/', '-_'), '='),
      	'sexo'=> $sex,
      	'imagen'=> 'df.jpg',
-     	'estado'=> $est
+     	'estado'=> $est,
+      'correo'=> $email
      ]);
-     $user=Turista::all();
-     $last=$user->last();
-     $last=$last->id_turista;
-     Correo::create([
-      'fk_id_turista' => $last,
-      'id_correoturista' => $email,
-      'estado' =>$est
-
-     ]);
-
     return back()->with('statu','Usuario correctamente registrado');
     }
 

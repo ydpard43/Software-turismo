@@ -7,11 +7,12 @@
         @if(session('status'))
         <h4 style="color:blue; ">{{session('status')}}</h4>
         @endif
-        <div style="text-align: center;">
-        <img style="width: 40%; border-radius: 100px; margin-bottom: 13px;" id="imagen" src="img/{{$turista->imagen}}">
-        <input style='display: none;' accept="image/*" id="archivo"type="file" name="img" >
-        </div>
         <form class="form-signin" action="{{route('ap')}}" method="post" enctype="multipart/form-data" >
+        <div style="text-align: center;">
+        <img style="width: 200px; height: 200px; border-radius: 100px; margin-bottom: 13px;" id="imagen" src="img/{{$turista->imagen}}">
+        <input style='display: none;' accept="image/*" id="archivo" type="file" name="img" onchange="loadImage(event)">
+        </div>
+        
             @csrf
         <div class="row mb-4">
           <div class="col">
@@ -22,7 +23,7 @@
           </div>
           <div class="col">
             <div class="form-outline">
-              <input style="background:#f1f1f1; " required type="email" value="{{$correo[0]->id_correoturista}}" id="forme" class="form-control" name="email" />
+              <input style="background:#f1f1f1; " required type="email" value="{{$turista->correo}}" id="forme" class="form-control" name="email" />
               <label class="form-label" for="forme">Correo</label>
             </div>
           </div>
@@ -89,5 +90,9 @@
 $('#imagen').click(function(event) {
     $('#archivo').click();
 });
+  var loadImage = function(event) {
+    var image = document.getElementById('imagen');
+    image.src = URL.createObjectURL(event.target.files[0]);
+  };
 </script>
 @endsection
