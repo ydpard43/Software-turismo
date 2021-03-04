@@ -33,16 +33,18 @@
         <hr>
          <div style="display: block ruby; text-align: center;">
             <span style="color: #808080;">Tiempo disponible</span>
-            <input type="number" name="time" required  min="10" max="500"style="width: 14%; padding-right: 0; padding-left: 0;text-align: center;" onkeypress="return valida(event)" class="" value="{{old('time')}}">
+
+            <input type="number" name="time" id="time" readonly required value="60"  min="60" max="500"style="width: 14%; padding-right: 0; padding-left: 0;text-align: center;" onkeypress="return valida(event)" class="" value="{{old('time')}}">
             {!!$errors->first('time','<span>:message</span>')!!}
             <span style="color: #808080;">Min</span>
+            <input type="checkbox" id="check" checked>
         </div>
         <h5>Seleccione el tipo de delimitación</h5>
         <select name="del">
             <option value="0">Municipios</option>
             <option value="1">En mapa</option>
         </select>
-<hr>
+<hr> 
          <button type="submit" class="btn btn-primary btn-block mb-4">Siguiente</button>
         </form>
         <br>
@@ -57,6 +59,14 @@
            patron =/[0-9\s]/;
             te = String.fromCharCode(tecla);
             return patron.test(te); 
-        }
+        } 
+        $('#check').on('change', function(e){
+    if (this.checked) {
+        $('#time').val('60');
+         $('#time').attr("readonly", true);
+    } else {
+         $('#time').attr("readonly", false);
+    }
+});
 </script>
 @endsection

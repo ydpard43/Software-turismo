@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Brick\Math\BigDecimal;
 use Illuminate\Http\Request;
 use DB;
 
@@ -11,8 +11,9 @@ class ruta extends Controller
   public $lista_rutas;
     public $n_poi=0;
     public $poi;
-    public $matriz ;
+    public $matriz;
     public $contador=1;
+    public $pn=array();
    
     public function nuevap1()
     {
@@ -138,12 +139,24 @@ class ruta extends Controller
         $sitios=session('sitios');
         $pesos=request('pesos');
         $id=request('id');
+         $tipo="'".implode("','",session('tip'))."'";
+         $vtp;
         $consult=DB::select('select poi.id_poi,poi.tiempoestancia,poi.nombre as pn,formula.nombre,formula.id_formula,poi_formula.valor,poi.coordenaday,poi.coordenadax,imagenpoi.id_imagenpoi
 			from poi,formula,poi_formula,imagenpoi
 			where poi.id_poi=poi_formula.fk_id_poi
 			and poi_formula.fk_id_formula=formula.id_formula
         and imagenpoi.fk_id_poi=poi.id_poi
 			and poi.id_poi in('.$sitios.')');
+        $consult20=DB::select('select poi.id_poi,count(tipologia.nombre) as t
+from poi,tipologia,poi_tipologia
+where poi.id_poi in('.$sitios.') 
+      and poi.id_poi=poi_tipologia.fk_id_poi 
+      and poi_tipologia.fk_id_tipologia=tipologia.id_tipologia
+       and tipologia.nombre in ('.$tipo.')
+      group by poi.id_poi');
+        foreach ($consult20 as $key ) {
+          $vtp[$key->id_poi]=$key->t;
+        }
         $val;
         $tiempo;
           $tt=session('time');
@@ -171,7 +184,7 @@ class ruta extends Controller
         
       foreach($val as $data){
         if(!in_array($data['id'],$resultado_id)){
-            $resultado[$data['id']] = $data['res'];
+            $resultado[$data['id']] = $data['res']+$vtp[$data['id']];
             $resultado_id[] = $data['id'];
             $tiempo[$data['id']]=array('tiempo'=>$data['tiempo'],
         							   'cx'=>$data['coordenadax'],
@@ -220,6 +233,7 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
 
 }
   }
+ 
   return view('rutat')->with('pun',$pp)->with('t',$tiempo);
     }
     public function nuevap5()
@@ -236,8 +250,7 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
         foreach ($consult as $key) {
         if ($poi[$i]==$key->id_poi) {
         $cd[]=$key->cy.','.$key->cx;
-        //echo " cx ".$key->cx.",".$key->cy." poi ".$key->id_poi;
-        echo "<br>";
+        $this->pn[$key->id_poi]=$key->pn." ";
         }
         }
         }
@@ -270,11 +283,8 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
       }
      
      $vmin[]=$min;
-    # echo "<br>";
      $ban=99999999;
       }
-      #var_dump($vmin);
-      #echo "<br>";
     for ($i=0; $i <count($pois) ; $i++) { 
      for ($j=0; $j <count($pois) ; $j++) {
       if ($i!=$j) {
@@ -285,7 +295,6 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
      $vmin=[];
            for ($i=0; $i <count($pois) ; $i++) { 
      for ($j=0; $j <count($pois) ; $j++) { 
-       # echo '    '.$pois[$j][$i].'  '; 
                 if ($j!=$i) {
         if (bccomp($pois[$j][$i],$ban,10)==-1) {
             $min=($pois[$j][$i]);
@@ -301,98 +310,148 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
       #echo "<br>";
          for ($i=0; $i <count($pois) ; $i++) { 
      for ($j=0; $j <count($pois) ; $j++) { 
-       # echo $pois[$j][$i].' ';
+       // echo $pois[$j][$i].' ';
        if ($j!=$i) {
         $pois[$j][$i]=($pois[$j][$i])-$vmin[$i];
       }
       }
-      #echo "<br>";
-    }
-    $a=0;
-    for ($i=0; $i <count($pois) ; $i++) { 
-     for ($j=0; $j <count($pois) ; $j++) { 
-     //   echo $pois[$i][$j].'  '; 
-    if ($pois[$i][$j]==0) {
-//         echo $i."  ".$j." ";        
+     // echo "<br>";
+    } 
 
-    }
-      }echo "<br>";
-    }
+    $a=0;
   $this->lista_rutas[] = new route();
-  $this->n_poi=7;
-  $this->poi=Array("Momias ","Casona Coburgo ","Paramo del Sumapaz ","Museo arqueologico ","Casona Novillero ","Casona Balmoral ","Casona Tulipana ");
-  $this->matriz=Array(Array("-1","0.9","0","-1","0","1.6","0.4"),
-                      Array("34.65","-1","-1","0","2.05","0.15","0"),
-                      Array("0","-1","-1","25.45","27.7","30.6","30"),
-                      Array("36.4","0","-1","-1","2.5","1.4","0.6"),
-                      Array("32.2","0.5","-1","0.95","-1","0","0"),
-                      Array("35.2","0","-1","1.25","1.4","-1","0.2"),
-                      Array("34.14","0","-1","0.6","1.55","0.35","-1")); 
+  $this->n_poi=count($poi);
+  $this->poi=$poi;
+  $this->matriz=$pois; 
     $this->poi_conectados[] = new Conexion(); 
     for($i = 0; $i < count($this->matriz); $i++) {
             $poi_c = new Conexion();
             for ($j = 0; $j < count($this->matriz); $j++) {
-                if ($this->matriz[$i][$j]!="-1") {                             //Se añaden las columnas de los puntos de interes mas eficientes en pos_admitidas.
+                if ($this->matriz[$i][$j]!="-1") {                     
                     $poi_c->setConexiones($j);
                     $poi_c->setValor($this->matriz[$i][$j]);
+                   
                 }
             }
             $this->poi_conectados[]=($poi_c);
+          
         }
         
-       // var_export($this->poi_conectados);
-         $this->formar_posi($x=Array(),$y=Array(), 0, "0",1);
-     //    $this->mostrar_rutas();
-      //   $this->rutas_aptas();
+      $this->formar_posi($x=Array(),$y=Array(), 0, "0");
+     
+      $result=$this->rutas_aptas();
+       return view('guardarr')->with('rt',$result)->with('p',$this->pn);
 
             }
-   public function formar_posi($recorrido,$valor,$poi_anterior,$val_anterior,$a)
+
+  public function nuevap6()
+  {
+    $sitios=request('indice');
+      $consult=DB::select('select poi.id_poi,poi.tiempoestancia,poi.nombre as pn,poi.coordenaday as cy,poi.coordenadax as cx,imagenpoi.id_imagenpoi as img
+            from poi,imagenpoi where poi.id_poi in('.$sitios.')
+            and imagenpoi.fk_id_poi=poi.id_poi'
+            );
+       $poi=explode(",",$sitios);
+       $sum=0;
+       $time=0;
+       $poi_anterior;
+       $poi_actual;
+       $cd;
+       $tiempo;
+       $nombres;
+  
+       foreach ($consult as $key) {
+         $cd[]=$key->cy.','.$key->cx;
+         $tiempo[]=$key->tiempoestancia;
+         $nombres[]=array('nombre'=>$key->pn,'img'=>$key->img);
+       }
+       foreach ($poi as $key => $value) {
+
+        if ($key==0) {
+         $poi_anterior=$cd[$key];
+         
+       }else{
+       
+          $poi_actual=$cd[$key];
+            $data = file_get_contents('http://0.0.0.0:5000/route/v1/car/'.$poi_anterior.';'.$poi_actual, null, stream_context_create([
+                'http' => [
+                'protocol_version' => 1.1,
+                'header'           => [
+                'Connection: close',],],]));
+        $data=json_decode($data);
+        
+        $sum=$sum+(($data->routes[0]->distance)/1000); 
+        $time=$time+$tiempo[$key]+(round(($data->routes[0]->duration)/60));
+          $poi_anterior=$cd[$key];
+
+       } 
+       }
+       return view('guardarrp2')->with('time',$time)->with('total',$sum)->with('poi',$poi)->with('nombres',$nombres);
+
+  }
+  public function nuevap7()
+  {
+    $ruta=request('poi');
+    
+    $consult=DB::table('ruta')
+              ->select(DB::raw('MAX(id_ruta) as id'))
+              ->where('fk_id_turista','1')
+              ->get();
+    if (isset($consult[0]->id)) {
+      return $consult2=DB::table('ruta')
+        ->insert([
+          'id_ruta'=>$consult[0]->id+1,
+          'estrellas'=>request('estrellas'),
+          'fk_id_poi'=>request('poi'),
+          'fk_id_turista'=>session('id')
+        ]);
+
+
+      $consult[0]->id;
+    }else{
+      return -1;
+    }
+    
+  }
+   public function formar_posi($recorrido,$valor,$poi_anterior,$val_anterior)
     {
-        $recorrido[]=$poi_anterior;                            //Se agrega el POI siguiente al recorrido.
+        $recorrido[]=$poi_anterior;                            
         $valor[]=$val_anterior;
-          // echo $poi_anterior." ".$this->contador;   
-         foreach ($recorrido as $key => $value) {
-         echo $value."  ";
-         }
-             echo "<br>";
-        foreach ($valor as $key => $value) {
-       // echo $value."  ";
-         }
-             echo "<br>";
-     echo "[".$this->contador."]";
-           $this->contador= $this->contador+1;
-           // var_dump($val_anterior);
-             echo "<br>";
         if(count($recorrido)==$this->n_poi){
+
             $res[]=0;
             $r = new route();
             foreach ($recorrido as $iterador=>$key){
-                $r->setRuta($this->poi[$iterador]);                //Guarda las rutas validas en el objeto r.
+                $r->setRuta($this->poi[$key]);  
             }
             foreach ($valor as $iterador=>$key) {
-                $res[] = $iterador;
-                $r->setPuntaje($iterador);
+                $res[] = (float)$key;
+                $r->setPuntaje((float)$key);
             }
             $r->setRes($res);
             $this->lista_rutas[]=$r;
   
         }else{
-         $ct=count($this->poi_conectados[$a]->getConexiones());
-        for ($i=0; $i <$ct ; $i++) { 
-
-         if (!(in_array($this->poi_conectados[$a]->getConexiones()[$i],$recorrido))) {
-                
-              if ($i==$ct-1) {
-                 $this->formar_posi($reco=unserialize(serialize($recorrido)),$val=unserialize(serialize($valor)),$this->poi_conectados[$a]->getConexiones()[$i],$this->poi_conectados[$a]->getValor()[$i],$a);
-              }else if($i!=$ct-1){
-                    $this->formar_posi($reco=unserialize(serialize($recorrido)),$val=unserialize(serialize($valor)),$this->poi_conectados[$a]->getConexiones()[$i],$this->poi_conectados[$a]->getValor()[$i],$a+1);}
-           }
+           
+           if (count($recorrido)-1==0) {
+             $cont=0;
+           }else{
+             $cont=count($recorrido)-1;
+           }          
+      //var_export(count($this->poi_conectados[count($recorrido)]->getConexiones()));
+        for ($i=0; $i <count($this->poi_conectados[$recorrido[$cont]+1]->getConexiones()); $i++) { 
+        
+         if (!(in_array($this->poi_conectados[$recorrido[$cont]+1]->getConexiones()[$i],$recorrido))) {
+               $this->formar_posi($reco=unserialize(serialize($recorrido)),
+                $val=unserialize(serialize($valor)),$this->poi_conectados[$recorrido[$cont]+1]->getConexiones()[$i],
+                "".$this->poi_conectados[$recorrido[$cont]+1]->getValor()[$i]);
+              }
           
           }
 
           }
            
-        echo "<br>";
+      
          }
         
 
@@ -400,35 +459,54 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
       
     
         public function mostrar_rutas(){
-        $reco="Rutas validas";
-        foreach($this->lista_rutas as $iterador_rutas){
-          echo var_dump($iterador_rutas->getRuta());
-          echo "<br>otro<br>";
-          //  $reco=$reco."\n".($iterador_rutas->getRuta()." Valor: ".$iterador_rutas->getPuntaje()." Resultado: ".$iterador_rutas->getRes());                  //Imprime las rutas validas/optimas con su valor.
-        }
-      // echo $reco;
+       //echo "Rutas validas <br>";
+           echo "<pre>";
+     for ($i=1; $i <count($this->lista_rutas) ; $i++) { 
+    
+      for($j=0;$j< count($this->lista_rutas[$i]->getRuta());$j++){
+        print_r($this->pn[$this->lista_rutas[$i]->getRuta()[$j]]."   ");
+         //print_r($this->lista_rutas[$i]->getPuntaje()[$j]. "  ");
+      }
+      
+      echo "Resultado ";
+      print_r(array_sum($this->lista_rutas[$i]->getRes()));
+      echo "<br>";
+     }
     }
 
       public function rutas_aptas(){
-        $res_ant=9999;
+        $res_ant= 999999;
         $index=[];
         $cont=0;
-        foreach($this->lista_rutas as $iterador_rutas){
-            if(($res_ant<=>$iterador_rutas->getRes())==1){
+        foreach($this->lista_rutas as $iterador_rutas=>$valor){
+          if ($iterador_rutas!=0) {
+            if((bccomp($res_ant,array_sum($valor->getRes()),100))==1){
                 $index=[];
                 $index[]=$cont;
-                $res_ant=$iterador_rutas->getRes();
-            }else if(($res_ant<=>$iterador_rutas->getRes())==0){
+              //  var_export($cont);
+                $res_ant=array_sum($valor->getRes());
+            }else if((bccomp($res_ant,array_sum($valor->getRes()),100))==0){
                 $index[]=$cont;
             }
             $cont++;
+          }
         }
-        $ruta="\nRutas más aptas:";
-        foreach ($index as $iterador) {
-          var_dump($this->lista_rutas[2]->getRuta());
+
+        $result=[];
+        #echo "Rutas más aptas:";
+        foreach ($index as $iterador=>$value) {
+         foreach ($this->lista_rutas[$value+1]->getRuta() as $key => $value2) {
+         # echo $this->pn[$value2]." ";
+         }
+          $result[]=$this->lista_rutas[$value+1]->getRuta();
+        
+         #var_export(round(array_sum($this->lista_rutas[$value+1]->getRes()),4));
+          
+          
            // $ruta=$ruta."\n".($this->lista_rutas[$iterador]->getRuta()."Valor: ".$this->lista_rutas[$iterador]->getRes());
         }
-        echo ($ruta);
+        return $result;
+      
     }
 
     public function verr()

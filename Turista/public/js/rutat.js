@@ -23,3 +23,6 @@ function pp(e) {
 L.easyButton('<img src="img/enviar.png" style="width:15px;">', function(btn, map){
 document.formulario.submit();
 }).addTo(map);
+L.easyButton('<img src="img/ayuda.png" style="width:20px; margin: -2px;">', function(btn, map){
+$('#info').modal('show');
+}).addTo(map);

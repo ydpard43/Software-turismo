@@ -30,24 +30,17 @@
           <h5 class="card-title titulo">Restablecer Contraseña</h5>
           <form action="" onsubmit="funcionSubmit(event)" method="POST" class="needs-validation">
             @csrf
-            <!-- Email input -->
             <div class="form-outline mb-4">
               <input type="email" required class="form-control" id="correo" style="background: #f1f1f1;"  name="email" />
               <label class="form-label" id='label'  for="form2Example1">Digita tu correo</label>
             </div>
-
-            <!-- Submit button -->
             <button type="submit" id='button' class="btn btn-primary btn-block mb-4">Recuperar contraseña</button>
-          
-            <!-- Register buttons -->
             <div class="text-center">
               <p>Ya tienes una cuenta? <a href="{{route('iniciar')}}">Inicia Sesión</a></p>
-              
             </div>
           </form>
         </div>
       </div>
-<!-- MDB -->
 <script
   type="text/javascript"
   src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.js"

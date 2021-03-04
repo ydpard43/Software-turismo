@@ -3,8 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Mail\correos;
 use Illuminate\Support\Facades\Mail;
-
-//Route::view('/','home')->name('home');
+ 
 Route::view('/crear','crear')->name('crear');
 Route::view('/listr','listr')->name('listr');
 Route::view('/actuap','actuap')->name('actuap');
@@ -17,6 +16,8 @@ Route::view('/mun','mun')->name('mun');
 Route::view('/map','map')->name('map');
 Route::view('/ecu','ecu')->name('ecu');
 Route::view('/rutat','rutat')->name('rutat');
+Route::view('/guardarr','guardarr')->name('guardarr');
+Route::view('/guardarrp2','guardarrp2')->name('guardarrp2');
 
 
 Route::get('/perfil','App\Http\Controllers\actua@verp')->name('perfil');
@@ -44,7 +45,8 @@ Route::post('map','App\Http\Controllers\ruta@nuevap3b');
 Route::post('ecu','App\Http\Controllers\ruta@nuevap4');
 Route::post('rutat','App\Http\Controllers\ruta@nuevap5');
 Route::post('/verr','App\Http\Controllers\ruta@verr2')->name('verr');
-
+Route::post('/guardarr','App\Http\Controllers\ruta@nuevap6');
+Route::post('/guardarrp2','App\Http\Controllers\ruta@nuevap7');
 Route::get('/pois','App\Http\Controllers\poi@consult')->name('pois');
 Route::post('correo','App\Http\Controllers\login@reestablecer');
 Route::post('cambiar','App\Http\Controllers\login@cambiar');
