@@ -15,6 +15,59 @@ class ruta extends Controller
     public $contador=1;
     public $pn=array();
    
+    public function consult()
+    {
+  $consult = DB::table('ruta')
+          ->select('ruta.id_ruta','ruta.nombre')
+          ->join('turista','turista.id_turista','=','ruta.fk_id_turista')
+          ->where('turista.id_turista','1')
+          ->orderBy('ruta.id_ruta','asc')
+          ->get();
+  $consult2=DB::table('municipio')
+          ->select('nombre')
+          ->orderBy('nombre','asc')
+          ->get();
+  $consult3=DB::select('select ruta.id_ruta ,poi.nombre as nomp,municipio.nombre as nomm,poi.imagen,poi_ruta.orden
+    from poi_ruta,ruta,poi,municipio,turista
+    where municipio.id_municipio=poi.fk_id_municipio
+    and poi_ruta.fk_id_poi=poi.id_poi
+    and poi_ruta.fk_id_ruta=ruta.id_ruta
+    and ruta.fk_id_turista=turista.id_turista
+    and turista.id_turista=1
+    order by ruta.id_ruta,orden asc');
+  return view('rutas')->with('rutas',$consult)->with('municipios',$consult2)->with('img',$consult3);
+    }
+    public function detalle($id)
+    {
+      $consult=DB::table('poi_ruta')
+                  ->select('ruta.id_ruta','ruta.nombre','ruta.tiempo','ruta.distancia','poi_ruta.fk_id_poi','poi.nombre as pn','poi.imagen')
+                  ->join('ruta','poi_ruta.fk_id_ruta','=','ruta.id_ruta')
+                  ->join('poi','poi_ruta.fk_id_poi','=','poi.id_poi')
+                  ->where('ruta.nombre',$id)
+                  ->orderBy('poi_ruta.orden')
+                  ->get();
+    return view('detalle')->with('ruta',$consult);
+    }
+    public function eliminar()
+    {
+      $id=request('ruta');
+      $consul=DB::table('poi_ruta')
+                  ->where('fk_id_ruta',$id)
+                  ->delete();
+       $consul=DB::table('ruta')
+                  ->where('id_ruta',$id)
+                  ->delete();
+      return $id;
+    }
+    public function actualiza()
+    {
+      $id=request('ruta');
+      $nombre=request('nombre');
+      $consul=DB::table('ruta')
+                  ->where('id_ruta',$id)
+                  ->update(['nombre'=>$nombre]);
+      return $id;
+    }
     public function nuevap1()
     {
     	$consult=DB::table('tipologia')
@@ -105,7 +158,8 @@ class ruta extends Controller
 	    session(['sitios' => $sit]);
 		}
               $consult2=DB::table('formula')
-        		 ->select('nombre','peso','id_formula','valormaximo')
+        		 ->select('id_formula','nombre')
+             ->where('estado','true')
         		 ->get();
         return view('ecu')->with('f',$consult2);
     	}else{
@@ -128,41 +182,172 @@ class ruta extends Controller
 	    	session()->forget('sitios');
 		 	return back()->with('status','Por favor rellene todos los campos');
     	}
-        $consult=DB::table('formula')
-        		 ->select('nombre','peso','id_formula','valormaximo')
-        		 ->get();
+         $consult=DB::table('formula')
+             ->select('id_formula','nombre')
+             ->where('estado','true')
+             ->get();
     return view('ecu')->with('f',$consult);
     }
     public function nuevap4()
     {
         $sitios=session('sitios');
-        $pesos=request('pesos');
-        $id=request('id');
+        $pesos=request('factor');
+        $pesos2=request('factor_variable');
+        $id=request('f_i');
+        $idfv=request('fvi');
+        $id_formula=request('formula');
+        $var=request('max_var');
          $tipo="'".implode("','",session('tip'))."'";
          $vtp;
-        $consult=DB::select('select poi.id_poi,poi.tiempoestancia,poi.nombre as pn,formula.nombre,formula.id_formula,poi_formula.valor,poi.coordenaday,poi.coordenadax,imagen
-			from poi,formula,poi_formula
-			where poi.id_poi=poi_formula.fk_id_poi
-			and poi_formula.fk_id_formula=formula.id_formula
-			and poi.id_poi in('.$sitios.')');
-        $consult20=DB::select('select poi.id_poi,count(tipologia.nombre) as t
-from poi,tipologia,poi_tipologia
-where poi.id_poi in('.$sitios.') 
-      and poi.id_poi=poi_tipologia.fk_id_poi 
-      and poi_tipologia.fk_id_tipologia=tipologia.id_tipologia
-       and tipologia.nombre in ('.$tipo.')
-      group by poi.id_poi');
-        foreach ($consult20 as $key ) {
+   
+        $consult=DB::select('select factor.id_factor,poi.id_poi,poi.nombre as pn,factor.nombre,max(poi_factor.valor) as valor,poi.tiempoestancia,poi.coordenadax,poi.coordenaday,imagen
+          from poi,formula,poi_factor,factor,factor_variable
+          where poi.id_poi=poi_factor.fk_id_poi
+          and poi_factor.fk_id_factor=factor.id_factor
+          and formula.id_formula='.$id_formula.'
+          and formula.id_formula=factor.fk_id_formula
+          and id_factor NOT IN (SELECT fk_id_factor
+          FROM factor_variable)
+          and poi.id_poi in('.$sitios.')
+          group by factor.id_factor,poi.id_poi
+          order by poi.id_poi');
+        $consult2=DB::select('select poi.id_poi,poi.nombre,count(tipologia.nombre) 
+        as t from poi,tipologia,poi_tipologia
+        where poi.id_poi in('.$sitios.') 
+        and poi.id_poi=poi_tipologia.fk_id_poi 
+        and poi_tipologia.fk_id_tipologia=tipologia.id_tipologia
+        and tipologia.nombre in ('.$tipo.')
+        group by poi.id_poi');
+        $consult3=DB::select('select variable.id_variable,variable.nombre as vn,factor.id_factor,poi.id_poi,poi.nombre as pn
+              ,factor.nombre,max(poi_factor.valor) as valor
+              from poi,formula,poi_factor,factor,factor_variable,variable
+              where poi.id_poi=poi_factor.fk_id_poi
+              and poi_factor.fk_id_factor=factor.id_factor
+              and formula.id_formula='.$id_formula.'
+              and formula.estado=true
+              and formula.id_formula=factor.fk_id_formula
+              and factor_variable.fk_id_factor=factor.id_factor
+              and factor_variable.fk_id_variable=variable.id_variable
+              and id_factor  IN (SELECT fk_id_factor
+              FROM factor_variable)
+              and poi.id_poi in('.$sitios.')
+              group by factor.id_factor,poi.id_poi,variable.id_variable
+              order by variable.id_variable');
+         $consult4=DB::select('select variable.id_variable as vi,count(variable.valormaximo),variable.nombre as vn,max(variable.valormaximo) as vp,variable.descripcion as vd
+      from formula,factor,variable,factor_variable
+      where formula.id_formula='.$id_formula.'
+      and formula.estado=true
+      and formula.id_formula=factor.fk_id_formula 
+      and variable.id_variable=factor_variable.fk_id_variable
+      and factor.id_factor=factor_variable.fk_id_factor
+      group by variable.id_variable
+      order by variable.id_variable');
+        $pos=0;
+        $max=0;
+        $st=explode(",",$sitios);
+        $ut=$st[count(explode(",",$sitios))-1];
+        if (count($consult)==0) {
+          return view('home');
+        }
+        foreach ($consult2 as $key ) {
           $vtp[$key->id_poi]=$key->t;
         }
+
         $val;
         $tiempo;
+        $resvar=[];
           $tt=session('time');
          $pp=[];
+        foreach ($consult3 as $key => $value) {
+           $resvar[$value->id_poi]=0;
+        }
+        foreach ($consult4 as $key=>$value) {
+        $variab=[];
+        $cont=1;
 
+        foreach ($consult3 as $key2=>$value2) {
+
+          if ($value2->id_variable==$value->vi) {
+ 
+            if ($value->count==1) {
+
+                if (strlen(stristr($value->vn,'NTP'))>0) {
+  if ((int)$value2->valor*(int)$pesos2[$pos]*(int)$vtp[$value2->id_poi]>$var[$max]) {
+    $resvar[$value2->id_poi]=$resvar[$value2->id_poi]+(int)$var[$max];
+  }else{
+    $resvar[$value2->id_poi]=$resvar[$value2->id_poi]+(int)$value2->valor*(int)$pesos2[$pos]*$vtp[$value2->id_poi];
+ 
+  }
+
+ if ($value2->id_poi==$ut) {
+ 
+   $pos=$pos+1;
+ }
+}else if(strlen(stristr($value->vn,'NTP'))==0){
+   if ($value2->valor*$pesos2[$pos]>$var[$max]) {
+    $resvar[$value2->id_poi]=$resvar[$value2->id_poi]+(int)$var[$max];
+  }else{
+    $resvar[$value2->id_poi]=$resvar[$value2->id_poi]+(int)$value2->valor*(int)$pesos2[$pos];
+  }
+  
+ if ($value2->id_poi==$ut) {
+   $pos=$pos+1;
+ 
+ }
+
+}
+          }else if ($value->count>1){
+            if (strlen(stristr($value->vn,'NTP'))>0) {
+if(array_key_exists($value2->id_poi,$variab)){
+$variab[$value2->id_poi]=$variab[$value2->id_poi]+(int)$value2->valor*(int)$pesos2[$pos];
+}else{
+  $variab[$value2->id_poi]=(int)$value2->valor*(int)$pesos2[$pos];
+}
+if($cont==$value->count){
+if ($variab[$value2->id_poi]*(int)$vtp[$value2->id_poi]>$var[$max]) {
+  $resvar[$value2->id_poi]=$resvar[$value2->id_poi]+(int)$var[$max];
+}else{
+  $resvar[$value2->id_poi]=$resvar[$value2->id_poi]+(int)$variab[$value2->id_poi]*(int)$vtp[$value2->id_poi];
+ }
+}
+             if ($value2->id_poi==$ut) {
+
+   $pos=$pos+1;
+   $cont=$cont+1;
+
+ }
+           }else if (strlen(stristr($value->vn,'NTP'))==0){
+
+            if(array_key_exists($value2->id_poi,$variab)){
+$variab[$value2->id_poi]=$variab[$value2->id_poi]+(int)$value2->valor*(int)$pesos2[$pos];
+}else{
+  $variab[$value2->id_poi]=(int)$value2->valor*(int)$pesos2[$pos];
+
+}
+if($cont==$value->count){
+if ($variab[$value2->id_poi]>$var[$max]) {
+  $resvar[$value2->id_poi]=$resvar[$value2->id_poi]+(int)$var[$max];
+}else{
+  $resvar[$value2->id_poi]=$resvar[$value2->id_poi]+(int)$variab[$value2->id_poi];
+ }
+}
+if ($value2->id_poi==$ut) {
+
+   $pos=$pos+1;
+   $cont=$cont+1;
+
+ }
+           }
+            }
+          }
+ 
+          
+        }
+        $max=$max+1;
+        }
         foreach ($consult as $p) {
         	for ($i=0; $i <count($id) ; $i++) { 
-        	if($p->id_formula==$id[$i]){
+        	if($p->id_factor==$id[$i]){
         	 $val[]=array('id' => $p->id_poi,
         	 'nombre'=>$p->pn,
         	 'item'=>$p->nombre,
@@ -175,14 +360,14 @@ where poi.id_poi in('.$sitios.')
         	}
         	}
         }
-       
+
+      
         $resultado=[];
         $resultado_id=[];
 
-        
       foreach($val as $data){
         if(!in_array($data['id'],$resultado_id)){
-            $resultado[$data['id']] = $data['res']+$vtp[$data['id']];
+            $resultado[$data['id']] = $data['res']+$resvar[$data['id']];
             $resultado_id[] = $data['id'];
             $tiempo[$data['id']]=array('tiempo'=>$data['tiempo'],
         							   'cx'=>$data['coordenadax'],
@@ -206,7 +391,7 @@ where poi.id_poi in('.$sitios.')
 
   	$res[]=$key;
   }
-  
+ 
   foreach ($res as $key=>$value) {
  
  if ($key==0) {
@@ -232,7 +417,7 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
 }
   }
  
-  return view('rutat')->with('pun',$pp)->with('t',$tiempo);
+return view('rutat')->with('pun',$pp)->with('t',$tiempo);
     }
     public function nuevap5()
     {
@@ -348,6 +533,7 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
       $consult=DB::select('select poi.id_poi,poi.tiempoestancia,poi.nombre as pn,poi.coordenaday as cy,poi.coordenadax as cx,imagen as img
             from poi where poi.id_poi in('.$sitios.')'
             );
+
        $poi=explode(",",$sitios);
        $sum=0;
        $time=0;
@@ -358,18 +544,20 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
        $nombres;
   
        foreach ($consult as $key) {
-         $cd[]=$key->cy.','.$key->cx;
-         $tiempo[]=$key->tiempoestancia;
-         $nombres[]=array('nombre'=>$key->pn,'img'=>$key->img);
+         $cd[$key->id_poi]=$key->cy.','.$key->cx;
+         $tiempo[$key->id_poi]=$key->tiempoestancia;
+         $nombres[$key->id_poi]=array('nombre'=>$key->pn,'img'=>$key->img);
        }
+       $band=0;
        foreach ($poi as $key => $value) {
 
-        if ($key==0) {
-         $poi_anterior=$cd[$key];
-         
+        if ($band==0) {
+         $poi_anterior=$cd[$value];
+         $band=1;
        }else{
        
-          $poi_actual=$cd[$key];
+          $poi_actual=$cd[$value];
+         
             $data = file_get_contents('http://0.0.0.0:5000/route/v1/car/'.$poi_anterior.';'.$poi_actual, null, stream_context_create([
                 'http' => [
                 'protocol_version' => 1.1,
@@ -378,37 +566,79 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
         $data=json_decode($data);
         
         $sum=$sum+(($data->routes[0]->distance)/1000); 
-        $time=$time+$tiempo[$key]+(round(($data->routes[0]->duration)/60));
-          $poi_anterior=$cd[$key];
+        $time=$time+$tiempo[$value]+(round(($data->routes[0]->duration)/60));
+          $poi_anterior=$cd[$value];
 
        } 
        }
-       return view('guardarrp2')->with('time',$time)->with('total',$sum)->with('poi',$poi)->with('nombres',$nombres);
+    
+      return view('guardarrp2')->with('time',$time)->with('total',$sum)->with('poi',$poi)->with('nombres',$nombres);
 
   }
   public function nuevap7()
   {
     $ruta=request('poi');
-    
+     $time=request('time');
+     var_dump($time);
+    $point=[];
     $consult=DB::table('ruta')
               ->select(DB::raw('MAX(id_ruta) as id'))
               ->where('fk_id_turista','1')
               ->get();
-    if (isset($consult[0]->id)) {
-      return $consult2=DB::table('ruta')
-        ->insert([
-          'id_ruta'=>$consult[0]->id+1,
-          'estrellas'=>request('estrellas'),
-          'fk_id_poi'=>request('poi'),
-          'fk_id_turista'=>session('id')
-        ]);
+ if ($consult) {
+$consult2=DB::table('ruta')->insert([
+    'id_ruta' => ((int)$consult[0]->id)+1,
+    'nombre' => '12',
+    'fk_id_turista'=>'1',
+    'estado'=> true,
+    'tiempo'=>$time,
+    'hora'=>0,
+    'segundos'=>0,]);
+  for ($i=0; $i <count($ruta) ; $i++) {
+     $consult3=DB::table('poi_ruta')->insert([
+    'fk_id_poi' =>$ruta[$i],'fk_id_ruta'=>((int)$consult[0]->id)+1,'estado'=>'true','orden'=>$i+1
+]);
+  }
 
-
-      $consult[0]->id;
-    }else{
-      return -1;
-    }
-    
+if ($consult3) {
+  return 'Todo bien';
+}
+ }
+   
+  }
+  public function variables()
+  {
+    $id=request('id_formula');
+    $consult=DB::select('select variable.id_variable as vi,count(variable.valormaximo),variable.nombre as vn,max(variable.valormaximo) as vp,variable.descripcion as vd
+      from formula,factor,variable,factor_variable
+      where formula.id_formula='.$id.'
+      and formula.estado=true
+      and formula.id_formula=factor.fk_id_formula 
+      and variable.id_variable=factor_variable.fk_id_variable
+      and factor.id_factor=factor_variable.fk_id_factor
+      group by variable.id_variable
+      order by variable.id_variable');
+   $consult2=DB::select('select variable.id_variable as vi,variable.nombre as vn,variable.valormaximo as vp,variable.descripcion as vd,factor.id_factor as fi,factor.nombre as fn,factor.peso as fp,factor.descripcion as fd
+      from formula,factor,variable,factor_variable
+      where formula.id_formula='.$id.'
+      and formula.estado=true
+      and formula.id_formula=factor.fk_id_formula 
+      and variable.id_variable=factor_variable.fk_id_variable
+      and factor.id_factor=factor_variable.fk_id_factor
+      order by variable.id_variable');
+   return [$consult,$consult2];
+  }
+  public function factores()
+  {
+    $id=request('id_formula');
+return $consul=DB::select('SELECT factor.id_factor,factor.nombre,
+factor.peso,factor.descripcion,factor.valormaximo as fm
+FROM factor,formula
+WHERE id_factor NOT IN (SELECT fk_id_factor
+                       FROM factor_variable)
+and formula.id_formula='.$id.'
+and formula.estado=true
+and formula.id_formula=factor.fk_id_formula '); 
   }
    public function formar_posi($recorrido,$valor,$poi_anterior,$val_anterior)
     {
@@ -450,14 +680,8 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
            
       
          }
-        
-
-        
-      
-    
         public function mostrar_rutas(){
        //echo "Rutas validas <br>";
-           echo "<pre>";
      for ($i=1; $i <count($this->lista_rutas) ; $i++) { 
     
       for($j=0;$j< count($this->lista_rutas[$i]->getRuta());$j++){
@@ -512,7 +736,7 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
           ->select('id_ruta')
           ->join('turista','ruta.fk_id_turista','=','turista.id_turista')
           ->orderBy('id_ruta','asc')
-          ->where('turista.id_turista','1')
+          ->where('turista.id_turista','=',session('id'))
           ->get();
     
           
@@ -521,21 +745,49 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
     public function verr2()
     {
       $id=request('id_ruta');
-      $consult=DB::select('select ruta.id_ruta,ruta.fk_id_turista,ruta.tiempo,ruta.seconds,poi.id_poi,poi.coordenadax,poi.coordenaday,poi.nombre,poi_ruta.estado from ruta,poi_ruta,poi,turista where ruta.fk_id_turista=turista.id_turista and poi_ruta.fk_id_ruta=ruta.id_ruta and poi_ruta.fk_id_poi=poi.id_poi and ruta.id_ruta='.$id.' order by ruta.id_ruta');
+      $consult=DB::select('select ruta.id_ruta,ruta.fk_id_turista,ruta.minutos,ruta.hora,ruta.segundos,poi.id_poi,poi.coordenadax,poi.coordenaday,poi.nombre,poi.imagen,poi_ruta.estado from ruta,poi_ruta,poi,turista where ruta.fk_id_turista=turista.id_turista and poi_ruta.fk_id_ruta=ruta.id_ruta and poi_ruta.fk_id_poi=poi.id_poi and ruta.id_ruta='.$id.' order by poi_ruta.orden');
       return $consult;
+    }
+       public function actuareco()
+    {
+      
+      $idr=request('id_ruta');
+      $cx=request('coordenadax');
+      $cy=request('coordenaday');
+      $consult=DB::table('poi_ruta')
+      ->join('poi','poi.id_poi','=','poi_ruta.fk_id_poi')
+      ->where('poi_ruta.fk_id_ruta',$idr)
+      ->where('poi.coordenadax',$cx)
+      ->where('poi.coordenaday',$cy)
+      ->update(['poi_ruta.estado'=>'false']);
     }
     public function actuat()
     {
       $idr=request('id_ruta');
-      $time=request('time');
+      $minutes=request('minutes');
       $seconds=request('seconds');
+      $hora=request('hora');
       $consult=DB::table('ruta')
       ->where('id_ruta',$idr)
-      ->update(['tiempo'=>$time,'seconds'=>$seconds]);
-      if ($consult) {
-        return $seconds;
-      }
-
+      ->update(['hora'=>$hora,'minutos'=>$minutes,'segundos'=>$seconds]);
+    }
+    public function reset()
+    {
+        $idr=request('id_ruta');
+              $consult=DB::table('poi_ruta')
+      ->where('fk_id_ruta',$idr)
+      ->update(['poi_ruta.estado'=>'true']);
+    }
+    public function sites()
+    {
+      $site=request('sites');
+      $consult=DB::table('establecimiento')
+                  ->select('establecimiento.nombre','establecimiento.coordenadax','establecimiento.coordenaday')
+                  ->join('municipio','id_municipio','=','establecimiento.fk_id_municipio')
+                  ->join('tipo','tipo.id_tipo','=','establecimiento.fk_id_tipo')
+                  ->where('tipo.nombre',$site)
+                  ->get();
+      return $consult;
     }
 
         
@@ -589,4 +841,5 @@ class Conexion {
         $this->conexiones[]=$conexiones;
     }
 }
+
 

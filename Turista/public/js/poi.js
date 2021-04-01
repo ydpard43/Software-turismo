@@ -26,7 +26,6 @@
 sitios.push(app[i]['id_poi']);
    }
    }
-console.log(sitios);
 });
  map.on(L.Draw.Event.EDITRESIZE, function(event) {
             if (L.Browser.mobile) {

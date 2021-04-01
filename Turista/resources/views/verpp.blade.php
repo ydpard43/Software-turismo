@@ -76,9 +76,11 @@
 
 
         <div class="regist">
-        <button class="btn btn-primary" style="width:30%;" type="submit">Actualizar</button>
-        <a class="btn btn-primary" style="width: 40%;"  href="{{route('actualizar')}}">Cambiar contraseña</a>
+        <button class="btn btn-primary"  type="submit">Actualizar</button>
+         <a class="btn btn-primary"   href="{{route('actualizar')}}">Cambiar contraseña</a>
         </div>
+        <br>
+    
             </form>
            </div>
 </div>

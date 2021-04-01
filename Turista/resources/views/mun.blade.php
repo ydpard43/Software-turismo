@@ -2,7 +2,7 @@
 @section('title','Delimitacion')
 
 @section('content')
-<div class="card presentacion">
+<div class="card">
     <div class="card-body">
         <h2 class="card-title titulo" style="text-align: center;">Nueva ruta</h2>
         <span>Seleccione los municipios</span>

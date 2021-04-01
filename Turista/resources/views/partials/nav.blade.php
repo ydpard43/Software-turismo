@@ -52,20 +52,23 @@
 				<i></i>
 			</div>
 			<div>
-			<div class="router">
-				<span style="font-size: 19px;">Porcentaje</span>
+
+			<div class="text-center">
+				<h5>Tiempo</h5>
+				<div style="font-size: 19px;">
+				<i id="hora">0</i><i style="margin-left: 2px;"> hora(s) </i> <i style="margin-left: 2px;" id="minutes">0</i><i style="margin-left: 2px;"> min </i>
+<i style="margin-left: 7px;" id="seconds"> 0</i> <i style="margin-left: 2px;"> seg </i>
+			</div>
+			</div>
+			<br>
+			<div class="text-center">
+				<span style="font-size: 19px;">Porcentaje : </span>
 				<span  id="porcent"style="font-size: 19px;">0%</span>
 			</div>
-			<div class="router">
-				<span>Tiempo</span>
-				<div style="display: flex; font-size: 19px;">
-				<input type="text" style="border: none;  width: 15%; padding: 0;background: transparent;" disabled="true"  id="minutes"value="0" /><i style="padding-top: 5px;">min</i>
-<input type="text" style="border: none;   width: 15%; padding: 0;margin-left: 10%; background: transparent;" disabled="true"id="seconds"  value="0" /> <i style="padding-top: 5px;">seg</i>
-			</div>
-			</div>
-			<div class="router">
-				<span>Pois faltantes</span>
-				<span id="restantes"></span>
+			<br>
+			<div class="text-center">
+				<span style="font-size: 19px;">Pois faltantes : </span>
+				<span style="font-size: 19px;"id="restantes"></span>
 			</div>
 			</div>
 			<div class="access">

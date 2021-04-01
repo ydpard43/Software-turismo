@@ -1,8 +1,7 @@
 @extends('status')
 @section('title','Nueva ruta')
-
 @section('content')
-<div class="card presentacion">
+<div class="card">
     <div class="card-body">
         <h2 class="card-title titulo" style="text-align: center;">Nueva ruta</h2>
         <h5 style="margin-bottom: 10px;">Seleccione las tipologias</h5>

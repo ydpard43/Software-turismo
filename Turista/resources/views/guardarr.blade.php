@@ -1,7 +1,7 @@
 @extends('status')
 @section('title','Guardar ruta')
 @section('content')
-<div class="card presentacion">
+<div class="card">
     <div class="card-body">
         <h2 class="card-title titulo" style="text-align: center;">Rutas disponibles</h2>
         <h5 style="margin-bottom: 10px;">Seleccione la ruta de su agrado</h5>
@@ -49,15 +49,7 @@
     var select;
      var app = @json($rt);
      var route=@json($p);
-        $('#check').on('change', function(e){
-    if (this.checked) {
-        $('#time').val('60');
-         $('#time').attr("readonly", true);
-    } else {
-         $('#time').attr("readonly", false);
-    }
-});
-        function actualizar(a) {
+    function actualizar(a) {
             select=a;
             $('#indice').val(app[select]);
         }
