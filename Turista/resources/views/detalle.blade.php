@@ -37,9 +37,11 @@
         </div>
 
         <br>
-        Distancia total: {{$ruta[0]->distancia}} km
+        Distancia total: {{round($ruta[0]->distancia,2)}} km
         <br>
         Tiempo aproximado: {{$ruta[0]->tiempo}} min
+        <br>
+        Costo Total : @if($ruta[0]->costo>0) $ {{$ruta[0]->costo}}@endif @if($ruta[0]->costo==0) Ninguno @endif
 
         <div style="text-align: center; display: block; width: 100%;">
             <br>

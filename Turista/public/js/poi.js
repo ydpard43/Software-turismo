@@ -1,5 +1,3 @@
-
- 	
  	 var estiloPopup = {'maxWidth': '300'};
  	 var sitios=[];
  	 var radio;

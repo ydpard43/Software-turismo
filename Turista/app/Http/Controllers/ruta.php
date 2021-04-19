@@ -40,7 +40,7 @@ class ruta extends Controller
     public function detalle($id)
     {
       $consult=DB::table('poi_ruta')
-                  ->select('ruta.id_ruta','ruta.nombre','ruta.tiempo','ruta.distancia','poi_ruta.fk_id_poi','poi.nombre as pn','poi.imagen')
+                  ->select('ruta.id_ruta','ruta.nombre','ruta.tiempo','ruta.distancia','poi_ruta.fk_id_poi','poi.nombre as pn','poi.imagen','ruta.costo')
                   ->join('ruta','poi_ruta.fk_id_ruta','=','ruta.id_ruta')
                   ->join('poi','poi_ruta.fk_id_poi','=','poi.id_poi')
                   ->where('ruta.nombre',$id)
@@ -402,15 +402,15 @@ if ($value2->id_poi==$ut) {
  }
  }else{
     $coor2=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
-    $data = file_get_contents('http://0.0.0.0:5000/route/v1/car/'.$coor1.';'.$coor2, null, stream_context_create([
+    $data = file_get_contents('https://api.mapbox.com/optimized-trips/v1/mapbox/driving/'.$coor1.';'.$coor2.'?access_token=pk.eyJ1IjoidHVyaXN0cm91dGUiLCJhIjoiY2tuYjY3N2t4MDR5MjJ2cGhyYjFibGc1YSJ9.VhhVvZdDGKvZG75AhvHWsw', null, stream_context_create([
                 'http' => [
                 'protocol_version' => 1.1,
                 'header'           => [
                 'Connection: close',],],]));
      $data=json_decode($data);
-    if (($tt-round($data->routes[0]->duration/60)-$tiempo[$value]['tiempo'])>=0) {
+    if (($tt-round($data->trips[0]->duration/60)-$tiempo[$value]['tiempo'])>=0) {
     $pp[]=$value;
-    $tt=$tt-round($data->routes[0]->duration/60)-$tiempo[$value]['tiempo'];
+    $tt=$tt-round($data->trips[0]->duration/60)-$tiempo[$value]['tiempo'];
 }
 $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
 
@@ -442,21 +442,20 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
         if ($a==$b) {
         $pois[$a][$b]=-1;
         }else{
-        $data = file_get_contents('http://0.0.0.0:5000/route/v1/car/'.$cd[$a].';'.$cd[$b], null, stream_context_create([
+        $data = file_get_contents('https://api.mapbox.com/optimized-trips/v1/mapbox/driving/'.$cd[$a].';'.$cd[$b].'?access_token=pk.eyJ1IjoidHVyaXN0cm91dGUiLCJhIjoiY2tuYjY3N2t4MDR5MjJ2cGhyYjFibGc1YSJ9.VhhVvZdDGKvZG75AhvHWsw', null, stream_context_create([
                 'http' => [
                 'protocol_version' => 1.1,
                 'header'           => [
                 'Connection: close',],],]));
         $data=json_decode($data);
         
-        $pois[$a][$b]=$data->routes[0]->distance; 
+        $pois[$a][$b]=$data->trips[0]->distance; 
     }
         }
         
         }
       for ($i=0; $i <count($pois) ; $i++) { 
      for ($j=0; $j <count($pois) ; $j++) { 
-      #  echo $pois[$i][$j].'  '; 
         if ($i!=$j) {
         if (bccomp($pois[$i][$j],$ban,10)==-1) {
             $min=($pois[$i][$j]);
@@ -486,19 +485,14 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
        }
       }
       $vmin[]=$min;
-      #echo "<br>";
       $ban=99999999;
     }
-      #var_dump($vmin);
-      #echo "<br>";
          for ($i=0; $i <count($pois) ; $i++) { 
      for ($j=0; $j <count($pois) ; $j++) { 
-       // echo $pois[$j][$i].' ';
        if ($j!=$i) {
         $pois[$j][$i]=($pois[$j][$i])-$vmin[$i];
       }
       }
-     // echo "<br>";
     } 
 
     $a=0;
@@ -530,7 +524,7 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
   public function nuevap6()
   {
     $sitios=request('indice');
-      $consult=DB::select('select poi.id_poi,poi.tiempoestancia,poi.nombre as pn,poi.coordenaday as cy,poi.coordenadax as cx,imagen as img
+      $consult=DB::select('select poi.id_poi,poi.tiempoestancia,poi.nombre as pn,poi.coordenaday as cy,poi.coordenadax as cx,imagen as img,costo
             from poi where poi.id_poi in('.$sitios.')'
             );
 
@@ -542,11 +536,12 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
        $cd;
        $tiempo;
        $nombres;
-  
+       $costo=0;
        foreach ($consult as $key) {
          $cd[$key->id_poi]=$key->cy.','.$key->cx;
          $tiempo[$key->id_poi]=$key->tiempoestancia;
          $nombres[$key->id_poi]=array('nombre'=>$key->pn,'img'=>$key->img);
+         $costo=$costo+(int)$key->costo;
        }
        $band=0;
        foreach ($poi as $key => $value) {
@@ -558,28 +553,30 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
        
           $poi_actual=$cd[$value];
          
-            $data = file_get_contents('http://0.0.0.0:5000/route/v1/car/'.$poi_anterior.';'.$poi_actual, null, stream_context_create([
+            $data = file_get_contents('https://api.mapbox.com/optimized-trips/v1/mapbox/driving/'.$poi_anterior.';'.$poi_actual.'?access_token=pk.eyJ1IjoidHVyaXN0cm91dGUiLCJhIjoiY2tuYjY3N2t4MDR5MjJ2cGhyYjFibGc1YSJ9.VhhVvZdDGKvZG75AhvHWsw', null, stream_context_create([
                 'http' => [
                 'protocol_version' => 1.1,
                 'header'           => [
                 'Connection: close',],],]));
         $data=json_decode($data);
         
-        $sum=$sum+(($data->routes[0]->distance)/1000); 
-        $time=$time+$tiempo[$value]+(round(($data->routes[0]->duration)/60));
+        $sum=$sum+(($data->trips[0]->distance)/1000); 
+        $time=$time+$tiempo[$value]+(round(($data->trips[0]->duration)/60));
           $poi_anterior=$cd[$value];
 
        } 
        }
     
-      return view('guardarrp2')->with('time',$time)->with('total',$sum)->with('poi',$poi)->with('nombres',$nombres);
+      return view('guardarrp2')->with('time',$time)->with('total',$sum)->with('poi',$poi)->with('nombres',$nombres)->with('costo',$costo);
 
   }
   public function nuevap7()
   {
     $ruta=request('poi');
      $time=request('time');
-     var_dump($time);
+     $cost=request('costo');
+     $nombre=request('name');
+     $distance=request('distance');
     $point=[];
     $consult=DB::table('ruta')
               ->select(DB::raw('MAX(id_ruta) as id'))
@@ -588,12 +585,16 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
  if ($consult) {
 $consult2=DB::table('ruta')->insert([
     'id_ruta' => ((int)$consult[0]->id)+1,
-    'nombre' => '12',
+    'nombre' => $nombre,
     'fk_id_turista'=>'1',
     'estado'=> true,
     'tiempo'=>$time,
     'hora'=>0,
-    'segundos'=>0,]);
+    'minutos' =>0,
+    'segundos'=>0,
+    'costo'=>$cost,
+    'distancia'=>$distance]
+     );
   for ($i=0; $i <count($ruta) ; $i++) {
      $consult3=DB::table('poi_ruta')->insert([
     'fk_id_poi' =>$ruta[$i],'fk_id_ruta'=>((int)$consult[0]->id)+1,'estado'=>'true','orden'=>$i+1
@@ -665,7 +666,6 @@ and formula.id_formula=factor.fk_id_formula ');
            }else{
              $cont=count($recorrido)-1;
            }          
-      //var_export(count($this->poi_conectados[count($recorrido)]->getConexiones()));
         for ($i=0; $i <count($this->poi_conectados[$recorrido[$cont]+1]->getConexiones()); $i++) { 
         
          if (!(in_array($this->poi_conectados[$recorrido[$cont]+1]->getConexiones()[$i],$recorrido))) {
@@ -704,7 +704,6 @@ and formula.id_formula=factor.fk_id_formula ');
             if((bccomp($res_ant,array_sum($valor->getRes()),100))==1){
                 $index=[];
                 $index[]=$cont;
-              //  var_export($cont);
                 $res_ant=array_sum($valor->getRes());
             }else if((bccomp($res_ant,array_sum($valor->getRes()),100))==0){
                 $index[]=$cont;
@@ -714,17 +713,10 @@ and formula.id_formula=factor.fk_id_formula ');
         }
 
         $result=[];
-        #echo "Rutas más aptas:";
         foreach ($index as $iterador=>$value) {
          foreach ($this->lista_rutas[$value+1]->getRuta() as $key => $value2) {
-         # echo $this->pn[$value2]." ";
          }
           $result[]=$this->lista_rutas[$value+1]->getRuta();
-        
-         #var_export(round(array_sum($this->lista_rutas[$value+1]->getRes()),4));
-          
-          
-           // $ruta=$ruta."\n".($this->lista_rutas[$iterador]->getRuta()."Valor: ".$this->lista_rutas[$iterador]->getRes());
         }
         return $result;
       

@@ -22,7 +22,7 @@ public function consult()
 }
 public function ind($id)
 {
-		$consult = DB::select("select poi.nombre as nomp,poi.id_poi,municipio.nombre as nomm,imagen,tipologia.nombre,poi.descripcion from poi,municipio,tipologia,poi_tipologia where poi.nombre='".$id."' and municipio.id_municipio=poi.fk_id_municipio 
+		$consult = DB::select("select poi.nombre as nomp,poi.id_poi,municipio.nombre as nomm,imagen,tipologia.nombre,poi.descripcion,poi.costo from poi,municipio,tipologia,poi_tipologia where poi.nombre='".$id."' and municipio.id_municipio=poi.fk_id_municipio 
 			and poi.id_poi=poi_tipologia.fk_id_poi and poi_tipologia.fk_id_tipologia=tipologia.id_tipologia");
 		$consult2=DB::table('poi_turista')
 						->select('poi_turista.opinion','poi_turista.estrellas','turista.alias','turista.id_turista')

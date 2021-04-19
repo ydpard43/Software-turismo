@@ -30,7 +30,11 @@
                  @endif
                 @endforeach
               </div>
+              <div class="col-md">
+                Costo : @if($poi[0]->costo >0) $ {{$poi[0]->costo >0}}@endif @if($poi[0]->costo==0) Ninguno    @endif
+              </div>
               <p class="mt-2">Descripción: {{$poi[0]->descripcion}}</p>
+
             <small class="text-muted">
             @for($i=0;$i<$estrellas;$i++)
             <i style="font-size: 22px;" class="fa fa-star star-act" aria-hidden="true"></i>
@@ -115,7 +119,7 @@
                     $a[0]=1;
                     @endphp
                 <div class="form-outline mb-4">
-                    <textarea class="form-control"style="background: #f1f1f1;"id="form" name="op" rows="4">{{$op->opinion}}</textarea>
+                    <textarea minlength="5" maxlength="100" required class="form-control"style="background: #f1f1f1;"id="form" name="op" rows="4">{{$op->opinion}}</textarea>
                     <label class="form-label" for="form">Reseña</label>
                 </div>
                  <input type="hidden" name="poi" value="{{$poi[0]->id_poi}}">
@@ -149,14 +153,14 @@
           </div>
                   @if((session()->has('nombre')))
         @if($a[0]==0)
-        <form action="{{route('insertpoi')}}" method="post">
+        <form action="{{route('insertpoi')}}" onsubmit="validar(event)" name="formulario" id="formulario" method="post">
             @csrf
             <h5 class="card-title mb-3 mt-3">Escribe tu opinión</h5>
                 <div class="form-outline mb-4">
-                    <textarea class="form-control"style="background: #f1f1f1;"id="form" name="op" rows="4"></textarea>
+                    <textarea class="form-control" required minlength="5" maxlength="100" style="background: #f1f1f1;"id="form" name="op" rows="4"></textarea>
                     <label class="form-label" for="form">Reseña</label>
                 </div>
-                 <input type="hidden" name="poi" value="{{$poi[0]->id_poi}}">
+                 <input type="hidden" name="poi"  value="{{$poi[0]->id_poi}}">
                  <p class="clasificacion">
                     <input id="radio1" type="radio" name="estrellas" value="5">
                     <label  class="fa fa-star" aria-hidden="true" style="font-size: 25px;" for="radio1"></label>
@@ -199,4 +203,15 @@
   type="text/javascript"
   src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.js"
 ></script>
+<script>
+  function validar(event) {
+       event.preventDefault();
+     if (  $('#radio1').is(':checked') ||   $('#radio2').is(':checked') ||   $('#radio3').is(':checked') ||   $('#radio4').is(':checked') ||   $('#radio5').is(':checked')) {
+       document.formulario.submit();
+     }else{
+      console.log('not');
+     }
+  }
+  
+</script>
  @endsection

@@ -58,12 +58,11 @@ header .categorias a.activo{
   display: block;
   position: absolute;
   text-align: center;
-  width: 250px;
+  width: 25%;
   height: 250px;
-  margin-left: 1.5rem;
   margin-right:auto;
-padding-right: 0;
-padding-left: 1%;
+  padding-right: 0;
+  padding-left: 3%;
   z-index: 1;
 }
 .item.muuri-item-dragging {

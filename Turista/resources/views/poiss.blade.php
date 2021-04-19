@@ -21,7 +21,7 @@
                 data-descripcion="{{$p->nomp}}">
                 <div class="item-contenido" >
                 <div class="" >
-                <div class="col">
+                <div class="col h-100">
                 <div class="card">
                      <a style="color: #4f4f4f;" href="{{route('ver',$p->nomp)}}">
                   <img

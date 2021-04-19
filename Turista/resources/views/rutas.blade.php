@@ -1,5 +1,5 @@
 @extends('status')
-@section('title','Listado de Pois')
+@section('title','Listado de Rutas')
 @section('content')
  @include('partials.nav2')
     <div class="container">

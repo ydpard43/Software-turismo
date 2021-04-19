@@ -9,31 +9,60 @@ use Illuminate\Http\Request;
 class regis extends Controller
 {
   public function store(){
-       $prn=request('primern');
-       $sgn=request('segundon');
-       $pra=request('primera');
+      $prn=request('primern');
+      $sgn=request('segundon');
+      $pra=request('primera');
       $sga=request('segunda');
       $pas=request('password');
       $email=request('email');
       $sex=request('sexo');
-      if (request('sexo')=='-1') {
+      $alias=request('nomu');
+      if ($sex=='-1') {
       return back()->with('status','Seleccione un genero');
       }else if (empty($prn) || empty($sgn) || empty($pra) || empty($sga) || empty($pas) || empty($email)) {
        return back()->with('status','Por favor rellene todos los campos');
       }
-     Turista::create([
-     	'prnombre'=> $prn,
-     	'sgnombre'=> $sgn,
+      $ver_alias=Turista::select('alias')
+                        ->where('alias',$alias)
+                        ->get();
+    if (count($ver_alias)>0) {
+     return back()->with('status','El nombre de usuario no esta disponible');
+    }
+      $ver_correo=Turista::select('correo')
+                        ->where('correo',$email)
+                        ->get();
+     if (count($ver_correo)>0) {
+     return back()->with('status','El correo no esta disponible');
+    }
+      if (strlen($pas)<8) {
+     return back()->with('status','Error la contraseña debe contener minimo 8 caracteres');
+    }
+    $minuscula=preg_match('`[a-z]`',$pas);
+    $mayuscula=preg_match('`[A-Z]`',$pas);
+    $numeros=preg_match('`[0-9]`',$pas);
+    if ($mayuscula && $numeros && $minuscula) {
+      $consult=Turista::create([
+      'prnombre'=> $prn,
+      'sgnombre'=> $sgn,
       'prapellido'=> $pra,
-     	'sgapellido'=> $sga,
-     	'alias'=> request('nomu'),
-     	'contrasena'=> rtrim(strtr(base64_encode($pas), '+/', '-_'), '='),
-     	'sexo'=> $sex,
-     	'imagen'=> 'df.jpg',
-     	'estado'=> $est,
+      'sgapellido'=> $sga,
+      'alias'=> $alias,
+      'contrasena'=> rtrim(strtr(base64_encode($pas), '+/', '-_'), '='),
+      'sexo'=> $sex,
+      'imagen'=> 'df.jpg',
+      'estado'=> 'true',
       'correo'=> $email
      ]);
-    return back()->with('statu','Usuario correctamente registrado');
+     if ($consult) {
+     return back()->with('statu','Usuario correctamente registrado');
+    }
+  }else{
+      return back()->with('status','La contraseña debe contener minimo una mayuscula, una minuscula y un numero');
+    }}
+  
+
+     
+    
     }
 
-}
+

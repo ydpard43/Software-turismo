@@ -13,7 +13,7 @@
         <form action="{{route('mun')}}" method="POST">
             @csrf
         <div id="datos">
-        <div style="padding: 14px; border-radius:25px; border:solid #80edff; ">
+        <div>
            <div class="table-responsive-lg" style="max-height: 230px; overflow-y: auto;
                         overflow-x: hidden;">
             <table class="table table-borderless">
@@ -33,6 +33,7 @@
         </div>
         </div>
         <br>
+        <hr>
         <br>
         <div style="text-align: right; display: block; width: 100%;">
             <a class="btn btn-info"href="{{route('nuevar')}}">Atras</a>

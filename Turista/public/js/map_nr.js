@@ -21,19 +21,17 @@ L.drawLocal = {
                 },
                 finish: {
                     title: '',
-                    text: 'Finish'
+                    text: 'Finalizar'
                 },
                 undo: {
                     title: '',
                     text: 'Limpiar el último punto'
                 },
                 buttons: {
-                    polyline: 'Draw a polyline',
-                    polygon: 'Draw a polygon',
-                    rectangle: 'Draw a rectangle',
+
                     circle: 'Dibuja un Circulo',
-                    marker: 'Draw a marker',
-                    circlemarker: 'Draw a circlemarker'
+
+               
                 }
             },
             handlers: {
@@ -90,10 +88,10 @@ L.drawLocal = {
                     }
                 },
                 buttons: {
-                    edit: 'Edit layers',
-                    editDisabled: 'No layers to edit',
-                    remove: 'Delete layers',
-                    removeDisabled: 'No layers to delete'
+                    edit: 'Editar circulo',
+                    editDisabled: 'Actualmente no se ha dibujado un circulo',
+                    remove: 'Borrar circulo',
+                    removeDisabled: 'Actualmente no se ha dibujado un circulo'
                 }
             },
             handlers: {
@@ -119,6 +117,7 @@ var drawControl = new L.Control.Draw({
         rectangle: false,
         polyline:false,
         marker:false,
+        circlemarker:false,
         circle   : {
             metric: 'metric'
         }

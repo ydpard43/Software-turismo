@@ -120,6 +120,8 @@ minutes=result[0]['minutos'];
 seconds=result[0]['segundos'];
 band=0;
 Start();
+      $('#sec1').show();
+      $('#sec2').show();
         points = [];
         nm=[];
         img=[];
@@ -135,15 +137,18 @@ for (var i = 0; i < result.length; i++) {
     pointa.push([result[i]['coordenadax'],result[i]['coordenaday']]);
 }
 }
+
+
  document.getElementById("porcent").innerHTML =(1-(pointa.length/result.length))*100+"%";
  document.getElementById('restantes').innerHTML=pointa.length;
 n=points.length;
 control = L.routing.control({
     waypoints: points,
-    language:'es',
-    serviceUrl: 'http://0.0.0.0:5000/route/v1',
+    router:new L.Routing.mapbox('pk.eyJ1IjoidHVyaXN0cm91dGUiLCJhIjoiY2tuYjZmODViMDJmMjJvcnoyemVrenJqNiJ9.oiOBAjvJwskXLdPMIsUsFg',{language: 'es',}),
      routeWhileDragging: false,
+      language:'es',
      addWaypoints: false,
+      collapsible: true,
       createMarker: function(i, wp, nWps) {
     if (estado[i]) {
       return L.marker(wp.latLng, {
@@ -230,6 +235,56 @@ return d;
            
         margin: '10px',
         cursor: 'pointer',
+
+    }
+})
+.addTo(map);
+var cont='';
+if (result) {
+cont=cont+'<button type="button" class="btn">'+
+              '  <a href="perfil"><img style="width: 6vh;"src="img/fotografo.png"></a>'+
+              '</button>';
+}
+cont=cont+'<button type="button"  class="btn">'+
+              ' <a href="pois"><img style="width: 6vh;"src="img/marcador.png"></a>'+
+              '</button>'+
+              '<button type="button" id="menu1" class="btn">'+
+              '   <img src="img/senalizar.png" style="width: 6vh;">'+
+              '</button>';
+if (result) {
+  cont=cont+  '<div  id="rt2"style="display:none;">'+
+              '   <a href="nuevar"><img style="width: 6vh; position: absolute; bottom: 215%; right: 53%;"  src="img/varita.png"></a>'+
+              '</div>'+
+              '<div id="rt1" style="display:none;">'+
+              '   <a href="rutas"><img style="width: 6vh;position: absolute; bottom: 110%; right: 56%;"  src="img/ruta.png"></a>'+
+              '</div>'+
+               '<button type="button" id="menu2" class="btn">'+
+              '   <a><img style="width: 6vh;"  src="img/locations.png"></a>'+
+              '</button>'+
+              '<button type="button" class="btn">'+
+              '  <a href="salir"><img style="width: 6vh;"src="img/puerta.png"></a>'+
+              '</button>';
+}else{
+  cont=cont+'<div  id="rt2"style="display:none;">'+
+              '<a href="nuevar"><img style="width: 6vh; position: absolute; bottom: 120%; right: 38%;"  src="img/varita.png"></a>'+
+              '</div>'+
+              '<button type="button" class="btn">'+
+              '  <a href="iniciar"><img style="width: 6vh;"src="img/entrar.png"></a>'+
+              '</button>';
+}
+ 
+
+
+ L.control.custom({
+    position: 'bottomcenter',
+    content : cont,
+    classes : 'btn-group-horizontal btn-group',
+    style   :
+    {
+           
+        margin: '10px',
+        cursor: 'pointer',
+           background: 'white',
     }
 })
 .addTo(map);
@@ -239,6 +294,8 @@ var hotel= document.getElementById('hotel');
 var gas= document.getElementById('gas');
 var hospital= document.getElementById('hospital');
 var puntos;
+var menu1=document.getElementById('menu1');
+var menu2=document.getElementById('menu2');
 b.addEventListener("click", function(){
     if (!$('#restaurants').is(':visible')) {
     $('.btnr').show();
@@ -264,7 +321,7 @@ $.ajax({
       for(var i=0;i<result.length;i++){
       var km=getKilometros(posicion._latlng.lat,posicion._latlng.lng,result[i].coordenadax,result[i].coordenaday);
         if (km<2) {
-        var marcador=new L.marker([result[i].coordenadax,result[i].coordenaday],{icon:rst});
+        var marcador=new L.marker([result[i].coordenadax,result[i].coordenaday],{icon:rst}).bindPopup('<h5>'+result[i].nombre+'</h5>');
         sitios.push(marcador);
         map.addLayer(sitios[i]);
       }
@@ -288,7 +345,7 @@ hotel.addEventListener("click", function(){
       for(var i=0;i<result.length;i++){
         var km=getKilometros(posicion._latlng.lat,posicion._latlng.lng,result[i].coordenadax,result[i].coordenaday);
         if (km<2) {
-        var marcador=new L.marker([result[i].coordenadax,result[i].coordenaday],{icon:ht});
+        var marcador=new L.marker([result[i].coordenadax,result[i].coordenaday],{icon:ht}).bindPopup('<h5>'+result[i].nombre+'</h5>');
         sitios.push(marcador);
         map.addLayer(sitios[i]);
        }
@@ -313,7 +370,7 @@ gas.addEventListener("click", function(){
       for(var i=0;i<result.length;i++){
                 var km=getKilometros(posicion._latlng.lat,posicion._latlng.lng,result[i].coordenadax,result[i].coordenaday);
         if (km<5) {
-        var marcador=new L.marker([result[i].coordenadax,result[i].coordenaday],{icon:gr});
+        var marcador=new L.marker([result[i].coordenadax,result[i].coordenaday],{icon:gr}).bindPopup('<h5>'+result[i].nombre+'</h5>');
         sitios.push(marcador);
         map.addLayer(sitios[i]);}
       }
@@ -337,7 +394,7 @@ hospital.addEventListener("click", function(){
       for(var i=0;i<result.length;i++){
         var km=getKilometros(posicion._latlng.lat,posicion._latlng.lng,result[i].coordenadax,result[i].coordenaday);
         if (km<5) {
-        var marcador=new L.marker([result[i].coordenadax,result[i].coordenaday],{icon:hsp});
+        var marcador=new L.marker([result[i].coordenadax,result[i].coordenaday],{icon:hsp}).bindPopup('<h5>'+result[i].nombre+'</h5>');
         sitios.push(marcador);
         map.addLayer(sitios[i]);
       }
@@ -348,6 +405,22 @@ hospital.addEventListener("click", function(){
   
 
 });
+menu1.addEventListener("click",function() {
+   if (!$('#rt2').is(':visible')) {
+$('#rt1').show();
+$('#rt2').show();
+}
+else{
+$('#rt1').hide();
+$('#rt2').hide();
+}
+});
 
+menu2.addEventListener("click",function() {
+$('#info').modal('show');
+});
+function cerrar() {
+$('#info').modal('hide');
+}
 var sitios = new Array();
 

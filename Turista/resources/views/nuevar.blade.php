@@ -11,7 +11,7 @@
         <form action="{{route('nuevar')}}" method="POST">
             @csrf
         <div id="datos">
-        <div style="padding: 14px; border-radius:25px; border:solid #80edff; ">
+        <div>
            <div class="table-responsive-lg" style="max-height: 230px; overflow-y: auto;
                        overflow-x: hidden;">
             <table class="table table-borderless">
@@ -30,7 +30,7 @@
         </div>
         </div>
         <hr>
-         <div style="display: block ruby; text-align: center;">
+         <div class="text-center">
             <span style="color: #808080;">Tiempo disponible</span>
 
             <input type="number" name="time" id="time" readonly required value="60"  min="60" max="500"style="width: 14%; padding-right: 0; padding-left: 0;text-align: center;" onkeypress="return valida(event)" class="" value="{{old('time')}}">
@@ -38,12 +38,15 @@
             <span style="color: #808080;">Min</span>
             <input type="checkbox" id="check" checked>
         </div>
-        <h5>Seleccione el tipo de delimitación</h5>
+        <br>
+        <div class="text-center">
+        <span>Seleccione el tipo de delimitación : </span>
         <select name="del">
             <option value="0">Municipios</option>
             <option value="1">En mapa</option>
         </select>
-<hr> 
+        </div>
+<br>
          <button type="submit" class="btn btn-primary btn-block mb-4">Siguiente</button>
         </form>
         <br>

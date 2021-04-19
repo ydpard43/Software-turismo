@@ -23,19 +23,23 @@ return redirect()->to('/')->send();
               <button type="button" class="btn-close" data-bs-dismiss="alert" onclick="cerrar()" aria-label="Close"></button>
         </div>
         @endif
-      <form action="{{route('regist')}}" method="post">
+      <form action="{{route('regist')}}" class="needs-validation" method="post">
         @csrf
         <div class="row mb-4">
           <div class="col">
             <div class="form-outline">
-              <input style="background:#f1f1f1; " required type="text" value="{{old('nomu')}}" id="formu" class="form-control" name="nomu" />
+              <input style="background:#f1f1f1; " data-mdb-showcounter="true" minlength="4" 
+                maxlength="30" required type="text" value="{{old('nomu')}}" id="formu" class="form-control" name="nomu" />
               <label class="form-label" for="formu">Usuario</label>
+              <div class="form-helper"></div>
             </div>
           </div>
           <div class="col">
             <div class="form-outline">
-              <input style="background:#f1f1f1; " required type="email" value="{{old('email')}}" id="forme" class="form-control" name="email" />
+              <input style="background:#f1f1f1; " minlength="12" 
+                maxlength="40" data-mdb-showcounter="true" required type="email" value="{{old('email')}}" id="forme" class="form-control" name="email" />
               <label class="form-label" for="forme">Correo</label>
+               <div class="form-helper"></div>
             </div>
           </div>
         </div>
@@ -43,14 +47,18 @@ return redirect()->to('/')->send();
         <div class="row mb-4">
           <div class="col">
             <div class="form-outline">
-              <input style="background:#f1f1f1; " required onkeypress="return validate(event)" type="text" value="{{old('primern')}}" id="pn" class="form-control" name="primern" />
+              <input style="background:#f1f1f1; " data-mdb-showcounter="true" minlength="2" 
+                maxlength="10" required onkeypress="return validate(event)" type="text" value="{{old('primern')}}" id="pn" class="form-control" name="primern" />
               <label class="form-label" for="pn">1° nombre</label>
+               <div class="form-helper"></div>
             </div>
           </div>
           <div class="col">
             <div class="form-outline">
-              <input style="background:#f1f1f1; " required onkeypress="return validate(event)" type="text" value="{{old('primern')}}" type="text" id="sn" name="segundon" value="{{old('segundon')}}" class="form-control" />
+              <input style="background:#f1f1f1; " minlength="0" 
+                maxlength="10" data-mdb-showcounter="true" onkeypress="return validate(event)" type="text" value="{{old('primern')}}" type="text" id="sn" name="segundon" value="{{old('segundon')}}" class="form-control" />
               <label class="form-label" for="sn">2° nombre</label>
+               <div class="form-helper"></div>
             </div>
           </div>
         </div>
@@ -58,14 +66,18 @@ return redirect()->to('/')->send();
         <div class="row mb-4">
           <div class="col">
             <div class="form-outline">
-              <input style="background:#f1f1f1; " required onkeypress="return validate(event)" type="text" value="{{old('primern')}}" type="text" id="pa" value="{{old('primera')}}" name="primera"class="form-control" />
+              <input style="background:#f1f1f1; " minlength="2" 
+                maxlength="10" required data-mdb-showcounter="true" onkeypress="return validate(event)" type="text" value="{{old('primern')}}" type="text" id="pa" value="{{old('primera')}}" name="primera"class="form-control" />
               <label class="form-label" for="pa">1° apellido</label>
+               <div class="form-helper"></div>
             </div>
           </div>
           <div class="col">
             <div class="form-outline">
-              <input style="background:#f1f1f1; " required onkeypress="return validate(event)" type="text" value="{{old('primern')}}"type="text" id="sa" value="{{old('segunda')}}" name="segunda" class="form-control" />
+              <input style="background:#f1f1f1; "data-mdb-showcounter="true" required  minlength="2" 
+                maxlength="10" onkeypress="return validate(event)" type="text" value="{{old('primern')}}"type="text" id="sa" value="{{old('segunda')}}" name="segunda" class="form-control" />
               <label class="form-label" for="sa">2° apellido</label>
+               <div class="form-helper"></div>
             </div>
           </div>
         </div>
@@ -73,8 +85,10 @@ return redirect()->to('/')->send();
         <div class="row mb-4">
           <div class="col">
             <div class="form-outline">
-              <input style="background:#f1f1f1; " required value="{{old('password')}}" type="password" id="pass1" class="form-control" name="password" />
+              <input style="background:#f1f1f1; " minlength="8" data-mdb-showcounter="true"
+                maxlength="64" required value="{{old('password')}}" type="password" id="pass1" class="form-control" name="password" />
               <label class="form-label" for="pass1">Contraseña</label>
+               <div class="form-helper"></div>
             </div>
           </div>
           <div class="col">
