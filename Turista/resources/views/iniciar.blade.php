@@ -15,7 +15,7 @@ return redirect()->to('/')->send();
               <button type="button" class="btn-close" data-bs-dismiss="alert" onclick="cerrar()" aria-label="Close"></button>
         </div>
         @endif
-                <p id="profile-name" class="profile-name-card"><img id="profile-img" class="img-profile" src="{!!asset('img/turista.png')!!}" /></p>
+                <p id="profile-name" class="profile-name-card"><img id="profile-img" class="img-profile" src="{!!asset('img/viajero.png')!!}" /></p>
           <form action="{{route('iniciar')}}" method="POST">
             @csrf
             <div class="form-outline mb-4">

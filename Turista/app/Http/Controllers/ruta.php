@@ -17,6 +17,10 @@ class ruta extends Controller
    
     public function consult()
     {
+if (!(session()->has('nombre'))) {
+return redirect()->to('/')->send();
+}
+  $id=session('id');
   $consult = DB::table('ruta')
           ->select('ruta.id_ruta','ruta.nombre')
           ->join('turista','turista.id_turista','=','ruta.fk_id_turista')
@@ -33,14 +37,14 @@ class ruta extends Controller
     and poi_ruta.fk_id_poi=poi.id_poi
     and poi_ruta.fk_id_ruta=ruta.id_ruta
     and ruta.fk_id_turista=turista.id_turista
-    and turista.id_turista=1
+    and turista.id_turista='.$id.'
     order by ruta.id_ruta,orden asc');
   return view('rutas')->with('rutas',$consult)->with('municipios',$consult2)->with('img',$consult3);
     }
     public function detalle($id)
     {
       $consult=DB::table('poi_ruta')
-                  ->select('ruta.id_ruta','ruta.nombre','ruta.tiempo','ruta.distancia','poi_ruta.fk_id_poi','poi.nombre as pn','poi.imagen','ruta.costo')
+                  ->select('ruta.id_ruta','ruta.nombre','ruta.modalidad','ruta.tiempo','ruta.distancia','poi_ruta.fk_id_poi','poi.nombre as pn','poi.imagen','ruta.costo')
                   ->join('ruta','poi_ruta.fk_id_ruta','=','ruta.id_ruta')
                   ->join('poi','poi_ruta.fk_id_poi','=','poi.id_poi')
                   ->where('ruta.nombre',$id)
@@ -83,12 +87,23 @@ class ruta extends Controller
     {
     	$tipol=request('tip');
     	$t=request('time');
+      $m=request('mod');
+      $mod='';
+      if ($m=='0') {
+      $mod='driving';
+      }else if ($m=='1') {
+      $mod='walking';
+      }else if ($m=='2') {
+      $mod='cycling';
+      }
     	if(isset($tipol) && isset($t)){
 	    	session(['tip' => $tipol]);
-		 	session(['time' => $t]);
+		 	  session(['time' => $t]);
+        session(['mod'=>$mod]);
     	}else{
-	    	session()->forget('tip');
-		 	session()->forget('time');
+	      session()->forget('tip');
+		 	  session()->forget('time');
+        session()->forget('mod');
 		 	return back()->with('status','Por favor rellene todos los campos');
     	}
     	$d=request('del');
@@ -191,6 +206,7 @@ class ruta extends Controller
     public function nuevap4()
     {
         $sitios=session('sitios');
+        $mod=session('mod');
         $pesos=request('factor');
         $pesos2=request('factor_variable');
         $id=request('f_i');
@@ -199,7 +215,7 @@ class ruta extends Controller
         $var=request('max_var');
          $tipo="'".implode("','",session('tip'))."'";
          $vtp;
-   
+        var_dump($mod);
         $consult=DB::select('select factor.id_factor,poi.id_poi,poi.nombre as pn,factor.nombre,max(poi_factor.valor) as valor,poi.tiempoestancia,poi.coordenadax,poi.coordenaday,imagen
           from poi,formula,poi_factor,factor,factor_variable
           where poi.id_poi=poi_factor.fk_id_poi
@@ -391,7 +407,7 @@ if ($value2->id_poi==$ut) {
 
   	$res[]=$key;
   }
- 
+
   foreach ($res as $key=>$value) {
  
  if ($key==0) {
@@ -402,7 +418,7 @@ if ($value2->id_poi==$ut) {
  }
  }else{
     $coor2=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
-    $data = file_get_contents('https://api.mapbox.com/optimized-trips/v1/mapbox/driving/'.$coor1.';'.$coor2.'?access_token=pk.eyJ1IjoidHVyaXN0cm91dGUiLCJhIjoiY2tuYjY3N2t4MDR5MjJ2cGhyYjFibGc1YSJ9.VhhVvZdDGKvZG75AhvHWsw', null, stream_context_create([
+    $data = file_get_contents('https://api.mapbox.com/optimized-trips/v1/mapbox/'.$mod.'/'.$coor1.';'.$coor2.'?access_token=pk.eyJ1IjoidHVyaXN0cm91dGUiLCJhIjoiY2tuYjY3N2t4MDR5MjJ2cGhyYjFibGc1YSJ9.VhhVvZdDGKvZG75AhvHWsw', null, stream_context_create([
                 'http' => [
                 'protocol_version' => 1.1,
                 'header'           => [
@@ -422,6 +438,7 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
     public function nuevap5()
     {
     	$sitios=request('pois');
+      $mod=session('mod');
         $consult=DB::select('select poi.id_poi,poi.tiempoestancia,poi.nombre as pn,poi.coordenaday as cy,poi.coordenadax as cx
             from poi where poi.id_poi in('.$sitios.')');
         $poi=explode(",",$sitios);
@@ -442,7 +459,7 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
         if ($a==$b) {
         $pois[$a][$b]=-1;
         }else{
-        $data = file_get_contents('https://api.mapbox.com/optimized-trips/v1/mapbox/driving/'.$cd[$a].';'.$cd[$b].'?access_token=pk.eyJ1IjoidHVyaXN0cm91dGUiLCJhIjoiY2tuYjY3N2t4MDR5MjJ2cGhyYjFibGc1YSJ9.VhhVvZdDGKvZG75AhvHWsw', null, stream_context_create([
+        $data = file_get_contents('https://api.mapbox.com/optimized-trips/v1/mapbox/'.$mod.'/'.$cd[$a].';'.$cd[$b].'?access_token=pk.eyJ1IjoidHVyaXN0cm91dGUiLCJhIjoiY2tuYjY3N2t4MDR5MjJ2cGhyYjFibGc1YSJ9.VhhVvZdDGKvZG75AhvHWsw', null, stream_context_create([
                 'http' => [
                 'protocol_version' => 1.1,
                 'header'           => [
@@ -527,7 +544,7 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
       $consult=DB::select('select poi.id_poi,poi.tiempoestancia,poi.nombre as pn,poi.coordenaday as cy,poi.coordenadax as cx,imagen as img,costo
             from poi where poi.id_poi in('.$sitios.')'
             );
-
+       $mod=session('mod');
        $poi=explode(",",$sitios);
        $sum=0;
        $time=0;
@@ -553,7 +570,7 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
        
           $poi_actual=$cd[$value];
          
-            $data = file_get_contents('https://api.mapbox.com/optimized-trips/v1/mapbox/driving/'.$poi_anterior.';'.$poi_actual.'?access_token=pk.eyJ1IjoidHVyaXN0cm91dGUiLCJhIjoiY2tuYjY3N2t4MDR5MjJ2cGhyYjFibGc1YSJ9.VhhVvZdDGKvZG75AhvHWsw', null, stream_context_create([
+            $data = file_get_contents('https://api.mapbox.com/optimized-trips/v1/mapbox/'.$mod.'/'.$poi_anterior.';'.$poi_actual.'?access_token=pk.eyJ1IjoidHVyaXN0cm91dGUiLCJhIjoiY2tuYjY3N2t4MDR5MjJ2cGhyYjFibGc1YSJ9.VhhVvZdDGKvZG75AhvHWsw', null, stream_context_create([
                 'http' => [
                 'protocol_version' => 1.1,
                 'header'           => [
@@ -577,6 +594,15 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
      $cost=request('costo');
      $nombre=request('name');
      $distance=request('distance');
+     $mod=session('mod');
+     $moda;
+     if ($mod=='driving') {
+      $moda=0;
+     }else if($mod=='walking'){
+      $moda=1;
+     }else if ($mod=='cycling') {
+       $moda=2;
+     }
     $point=[];
     $consult=DB::table('ruta')
               ->select(DB::raw('MAX(id_ruta) as id'))
@@ -593,7 +619,8 @@ $consult2=DB::table('ruta')->insert([
     'minutos' =>0,
     'segundos'=>0,
     'costo'=>$cost,
-    'distancia'=>$distance]
+    'distancia'=>$distance,
+    'modalidad'=>$moda]
      );
   for ($i=0; $i <count($ruta) ; $i++) {
      $consult3=DB::table('poi_ruta')->insert([
@@ -602,7 +629,7 @@ $consult2=DB::table('ruta')->insert([
   }
 
 if ($consult3) {
-  return 'Todo bien';
+  return '1';
 }
  }
    
@@ -725,19 +752,18 @@ and formula.id_formula=factor.fk_id_formula ');
     public function verr()
     { 
           $consult=DB::table('ruta')
-          ->select('id_ruta')
+          ->select('id_ruta','nombre')
           ->join('turista','ruta.fk_id_turista','=','turista.id_turista')
           ->orderBy('id_ruta','asc')
           ->where('turista.id_turista','=',session('id'))
           ->get();
-    
-          
+     
     return view('home')->with('rt',$consult);
     }
     public function verr2()
     {
       $id=request('id_ruta');
-      $consult=DB::select('select ruta.id_ruta,ruta.fk_id_turista,ruta.minutos,ruta.hora,ruta.segundos,poi.id_poi,poi.coordenadax,poi.coordenaday,poi.nombre,poi.imagen,poi_ruta.estado from ruta,poi_ruta,poi,turista where ruta.fk_id_turista=turista.id_turista and poi_ruta.fk_id_ruta=ruta.id_ruta and poi_ruta.fk_id_poi=poi.id_poi and ruta.id_ruta='.$id.' order by poi_ruta.orden');
+      $consult=DB::select('select ruta.id_ruta,ruta.modalidad,ruta.fk_id_turista,ruta.minutos,ruta.hora,ruta.segundos,poi.id_poi,poi.coordenadax,poi.coordenaday,poi.nombre,poi.imagen,poi_ruta.estado from ruta,poi_ruta,poi,turista where ruta.fk_id_turista=turista.id_turista and poi_ruta.fk_id_ruta=ruta.id_ruta and poi_ruta.fk_id_poi=poi.id_poi and ruta.id_ruta='.$id.' order by poi_ruta.orden');
       return $consult;
     }
        public function actuareco()

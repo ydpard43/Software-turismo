@@ -4,7 +4,7 @@
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <img src="img/senalizar.png" style="width: 7%; margin-left: auto;"><h5 class="modal-title" style="margin-left: 2%;" id="staticBackdropLabel">Rutas</h5>
+                    <img src="img/ruta.png" style="width: 7%; margin-left: auto;"><h5 class="modal-title" style="margin-left: 2%;" id="staticBackdropLabel">Rutas</h5>
                     <button type="button" class="btn-close" data-mdb-dismiss="modal"aria-label="Close" onclick="cerrar()"></button>
                   </div>
                   <div class="modal-body">
@@ -16,7 +16,7 @@
 <option value="-1">Escoger</option>
 @if(isset($rt))
 @foreach($rt as $r)
-<option value="{{$r->id_ruta}}">Ruta {{$r->id_ruta}}</option>
+<option value="{{$r->id_ruta}}">{{$r->nombre}}</option>
 @endforeach
 @endif
 </select>

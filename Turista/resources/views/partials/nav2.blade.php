@@ -1,34 +1,35 @@
-	<div class="contenedor">
-		<main>
-			<nav>
-				<i class="btn-menu" style="margin-left: 14%;" data-pushbar-target="pushbar-menu"><img style="width:30px; height:30px; " src="img/menu.png"></i>
-			</nav>
-		</main>
-		<div data-pushbar-id="pushbar-menu" class="pushbar" style="width: 100px;" data-pushbar-direction="left">
-			<div class="btn-cerrar">
-				<i data-pushbar-close><img style="width: 20px;" src="img/eliminar.png"></i>
-			</div>
-			<nav>
-				@if((session()->has('nombre')))
-				<a href="{{route('perfil')}}"><img style="width: 70px; margin-left:13%; "src="img/fotografo.png"></a>
-				@endif
-				<a href=""><img style="width: 50px; margin-left:20%; padding-top:40%;"src="img/marcador.png"></a>
-				@if((session()->has('nombre')))
-				<li><a href="#"><img style="width: 50px; margin-left:20%; "src="img/senalizar.png" onclick="mostrar()"></a></li>
-				<ul class="o" id="u1">
-					<li><a href="{{route('nuevar')}}"><img style="width: 50px; margin-left:20%; "  src="img/varita.png"></a>
-					</li>
-					@if((session()->has('nombre')))
-				<li><a href="#"><img style="width: 50px; margin-left:20%; "  src="img/configuraciones.png"></a></li>
-					@endif
-			</ul>
-				@endif
-			@if(session()->has('nombre'))
-				<a href="{{route('salir')}}"><img style="width: 50px; margin-left:20%; "src="img/puerta.png"></a>
-				@else
-				<a href="{{route('iniciar')}}"><img style="width: 50px; margin-left:20%; "src="img/entrar.png"></a>
-				@endif
+	    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+          <ul class="navbar-nav">
+            <!-- Avatar -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle d-flex align-items-center hidden-arrow"
+                href="#"
+                id="navbarDropdownMenuLink"
+                role="button"
+                data-mdb-toggle="dropdown"
+                aria-expanded="false"
+              >
+              <button type="button" id="menu" class="btn btn-primary btn-lg btn-floating">
+                <i class="fas fa-align-justify"></i></button>
+              </a>
+              <ul class="dropdown-menu text-center" aria-labelledby="navbarDropdownMenuLink">
+                  <li><a class="dropdown-item" href="perfil" ><img src="img/perfil.png"></a></li>
+                  <li><a class="dropdown-item" href="pois" ><img src="img/marcador.png"></a></li>
+                  <li><a class="dropdown-item" id="rt" ><img src="img/ruta.png"></a></li>
+                  <li><a class="dropdown-item ocultar" id="rt1" href="nuevar" ><img class="icon2" src="img/mas.png"></a></li>
+                  	@if(session()->has('nombre'))
+                    <li><a class="dropdown-item ocultar" id="rt2" href="rutas" ><img class="icon2"  src="img/configuraciones.png"></a></li>
+                    @endif
+                    	@if(session()->has('nombre'))
+                        <li><a class="dropdown-item" href="salir" ><img src="img/puerta.png"></a></li>
+                        @else
+                        <li><a class="dropdown-item" href="iniciar" ><img  src="img/entrar.png"></a></li>
+                        @endif
 
-			</nav>
-		</div>
-	</div>
+              </ul>
+            </li>
+          </ul>
+        </div>
+    </nav>

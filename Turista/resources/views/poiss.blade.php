@@ -3,6 +3,7 @@
 @section('content')
  @include('partials.nav2')
     <div class="container">
+
         <header>
             <div class="logo">
                 <h1>Puntos de interes</h1>
@@ -45,17 +46,13 @@
     </div>
     <script src="https://unpkg.com/web-animations-js@2.3.2/web-animations.min.js"></script>
     <script src="https://unpkg.com/muuri@0.9.3/dist/muuri.min.js"></script>
+    <!-- MDB -->
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.0.0/mdb.min.js"
+></script>
     <script src="{!! asset('js/main.js') !!}"></script>
-     <script src="{!! asset('js/pushbar.js') !!}">
- </script>
- <script src="{!! asset('js/mostrar.js') !!}">
- </script>
- <script>
-        var pushbar=new Pushbar({
-            blur:true,
-            overlay:true
 
-        });
+ </script>
 
-</script>
  @endsection

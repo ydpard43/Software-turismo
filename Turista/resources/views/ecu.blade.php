@@ -2,6 +2,7 @@
 @section('title','Nueva ruta')
 @section('parts')
  <meta name="csrf-token" content="{{ csrf_token() }}" />
+ <link rel="stylesheet" type="text/css" href="css/number.css">
 @endsection
 @section('content')
 <div class="card text-center">
@@ -30,8 +31,6 @@
 <script
   type="text/javascript"
   src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.js"
-></script src="js/pp.js">
-<script>
-
-</script>
+></script>
+<script src="js/pp.js"></script>
 @endsection

@@ -22,7 +22,7 @@
         @for($i=0;$i<count($ruta);$i++)
     
             <div class="col">
-                <div class="card">
+                <div class="card h-100">
                   <img
                     src="../img/{{$ruta[$i]->imagen}}"
                     alt="..."
@@ -35,7 +35,8 @@
           @endfor
           </div>
         </div>
-
+        <br>
+        Modalidad: @if($ruta[0]->modalidad=='0') Carro @endif @if($ruta[0]->modalidad=='1') Pie @endif @if($ruta[0]->modalidad=='2') Bicicleta @endif
         <br>
         Distancia total: {{round($ruta[0]->distancia,2)}} km
         <br>

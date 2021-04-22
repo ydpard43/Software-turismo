@@ -1,8 +1,10 @@
-
 .guia{
   text-align: center;
 width: 100%;
 overflow: hidden;
+}
+.guia img{
+
 }
 .card{
     margin: 3% 25% 25% 25%;
@@ -27,9 +29,12 @@ overflow: hidden;
 }
 
 .dropdown-item img{
-    width: 50px;
+    width: 6vh;
 }
-
+.dropdown-item .icon2{
+    width: 5vh;
+    margin-bottom: 3px;
+}
 .presentacion{
     margin: 2% 25% 2% 25%;
 }
@@ -95,24 +100,7 @@ label:hover ~ label{color:orange;}
     75% {margin-left: -300%;}
     100% {margin-left: -300%;}
 }
-@media (max-width: 700px) {
-  .card {
-    margin: 10% 5% 25% 5%;
-    box-shadow: 0px 10px 23px 9px rgba(207,205,207,1);
-    border-radius: 25px;
-  }
-   .presentacion{
-    width: 100%;
-    margin: 5%;
-  }
-  .grid {
-    text-align: center;
-    margin-left: 2vh;
-  }
-  .delete{
-    margin-top: 2%;
-  }
-}
+
   .btn-group-vertical{
     box-shadow: none;
   }
@@ -186,4 +174,66 @@ label:hover ~ label{color:orange;}
 .leaflet-routing-collapse-btn{
   right: 15px;
   color: black;
+}
+.icons_menu{
+  padding: 10px;
+}
+.icon_1{
+  width: 6vh;
+  position: absolute;
+  bottom: 110%;
+  right: 44%;
+}
+.icon_2{
+  width: 6vh;
+  position: absolute;
+  bottom: 180%;
+  right: 44%;
+}
+.icon_1_v2{
+  width: 5vh;
+  bottom: 110%;
+  position: absolute;
+  right: 38%;
+}
+@media (max-width: 600px) {
+  .card {
+    margin: 10% 5% 25% 5%;
+    box-shadow: 0px 10px 23px 9px rgba(207,205,207,1);
+    border-radius: 25px;
+  }
+   .presentacion{
+    width: 100%;
+    margin: 5%;
+  }
+  .grid {
+    text-align: center;
+    margin-left: 2vh;
+  }
+  .delete{
+    margin-top: 2%;
+  }
+    .control{
+    z-index: 400;
+     top: 0;
+  }
+  .leaflet-center{
+    top: 0;
+    left: 50%;
+    position: relative;
+    z-index: 400;
+  }
+.icon_1_v2{
+  top: 120%;
+}
+.icon_1{
+top: 210%;
+right: 42%;
+width: 5vh;
+}
+.icon_2{
+top: 120%;
+right: 42%;
+width: 5vh;
+}
 }

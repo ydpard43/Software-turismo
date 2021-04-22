@@ -47,6 +47,15 @@
         </select>
         </div>
 <br>
+        <div class="text-center">
+        <span>Seleccione la modalidad: </span>
+        <select name="mod">
+            <option value="0">En carro</option>
+            <option value="1">A pie</option>
+            <option value="2">En bicicleta</option>
+        </select>
+        </div>
+<br>
          <button type="submit" class="btn btn-primary btn-block mb-4">Siguiente</button>
         </form>
         <br>

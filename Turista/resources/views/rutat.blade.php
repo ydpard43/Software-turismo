@@ -25,6 +25,7 @@
                       <div class="guia">
                       <img src="img/screen2.jpg">
                       </div>
+                      <br>
                       <h6>2.Pulse el boton que contiene el texto 'Punto de partida'</h6>
                       <div class="guia">
                       <img src="img/screen3.jpg">
@@ -54,10 +55,6 @@
  <script src="{!! asset('js/map.js') !!}">
  </script>
     <script>
-        $('#info').modal('show');
-        function cerrar() {
-              $('#info').modal('hide');
-        }
     var app = @json($pun);
     var t= @json($t);
     </script>

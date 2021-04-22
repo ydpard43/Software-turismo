@@ -119,6 +119,15 @@ hora=result[0]['hora'];
 minutes=result[0]['minutos'];
 seconds=result[0]['segundos'];
 band=0;
+var mod=result[0]['modalidad'];
+var moda;
+if (mod=='0') {
+  moda='driving';
+}else if (mod=='1') {
+  moda='walking';
+}else if (mod=='2') {
+  moda='cycling';
+}
 Start();
       $('#sec1').show();
       $('#sec2').show();
@@ -149,6 +158,7 @@ control = L.routing.control({
       language:'es',
      addWaypoints: false,
       collapsible: true,
+      profil:moda,
       createMarker: function(i, wp, nWps) {
     if (estado[i]) {
       return L.marker(wp.latLng, {
@@ -241,35 +251,35 @@ return d;
 .addTo(map);
 var cont='';
 if (result) {
-cont=cont+'<button type="button" class="btn">'+
-              '  <a href="perfil"><img style="width: 6vh;"src="img/fotografo.png"></a>'+
+cont=cont+'<button type="button" class="btn icons_menu">'+
+              '  <a href="perfil"><img class="img_i" src="img/perfil.png"></a>'+
               '</button>';
 }
-cont=cont+'<button type="button"  class="btn">'+
-              ' <a href="pois"><img style="width: 6vh;"src="img/marcador.png"></a>'+
+cont=cont+'<button type="button"  class="btn icons_menu">'+
+              ' <a href="pois"><img class="img_i" src="img/marcador.png"></a>'+
               '</button>'+
-              '<button type="button" id="menu1" class="btn">'+
-              '   <img src="img/senalizar.png" style="width: 6vh;">'+
+              '<button type="button" id="menu1" class="btn icons_menu">'+
+              '   <img class="img_i" src="img/ruta.png">'+
               '</button>';
 if (result) {
   cont=cont+  '<div  id="rt2"style="display:none;">'+
-              '   <a href="nuevar"><img style="width: 6vh; position: absolute; bottom: 215%; right: 53%;"  src="img/varita.png"></a>'+
+              '   <a href="rutas"><img class="icon_1"  src="img/configuraciones.png"></a>'+
               '</div>'+
               '<div id="rt1" style="display:none;">'+
-              '   <a href="rutas"><img style="width: 6vh;position: absolute; bottom: 110%; right: 56%;"  src="img/ruta.png"></a>'+
+              '   <a href="nuevar"><img class="icon_2"  src="img/mas.png"></a>'+
               '</div>'+
-               '<button type="button" id="menu2" class="btn">'+
-              '   <a><img style="width: 6vh;"  src="img/locations.png"></a>'+
+               '<button type="button" id="menu2" class="btn icons_menu">'+
+              '   <a><img class="img_i"  src="img/locations.png"></a>'+
               '</button>'+
-              '<button type="button" class="btn">'+
-              '  <a href="salir"><img style="width: 6vh;"src="img/puerta.png"></a>'+
+              '<button type="button" class="btn icons_menu">'+
+              '  <a href="salir"><img class="img_i"src="img/puerta.png"></a>'+
               '</button>';
 }else{
   cont=cont+'<div  id="rt2"style="display:none;">'+
-              '<a href="nuevar"><img style="width: 6vh; position: absolute; bottom: 120%; right: 38%;"  src="img/varita.png"></a>'+
+              '<a href="nuevar"><img class="icon_1_v2" src="img/mas.png"></a>'+
               '</div>'+
-              '<button type="button" class="btn">'+
-              '  <a href="iniciar"><img style="width: 6vh;"src="img/entrar.png"></a>'+
+              '<button type="button" class="btn icons_menu">'+
+              '  <a href="iniciar"><img class="img_i" src="img/entrar.png"></a>'+
               '</button>';
 }
  
@@ -278,13 +288,13 @@ if (result) {
  L.control.custom({
     position: 'bottomcenter',
     content : cont,
-    classes : 'btn-group-horizontal btn-group',
+    classes : 'btn-group-horizontal btn-group control',
     style   :
     {
            
         margin: '10px',
         cursor: 'pointer',
-           background: 'white',
+        background: 'white',
     }
 })
 .addTo(map);
@@ -409,16 +419,15 @@ menu1.addEventListener("click",function() {
    if (!$('#rt2').is(':visible')) {
 $('#rt1').show();
 $('#rt2').show();
-}
-else{
+}else{
 $('#rt1').hide();
 $('#rt2').hide();
 }
 });
-
+if (menu2!=null) {
 menu2.addEventListener("click",function() {
 $('#info').modal('show');
-});
+});}
 function cerrar() {
 $('#info').modal('hide');
 }

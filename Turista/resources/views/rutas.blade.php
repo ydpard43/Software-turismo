@@ -1,6 +1,11 @@
 @extends('status')
 @section('title','Listado de Rutas')
 @section('content')
+@php
+if (!(session()->has('nombre'))) {
+return redirect()->to('/')->send();
+}
+@endphp
  @include('partials.nav2')
     <div class="container">
         <header>
@@ -43,19 +48,11 @@
             @endforeach
         </div>
     </div>
+    <script type="text/javascript"src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.0.0/mdb.min.js"></script>
     <script src="https://unpkg.com/web-animations-js@2.3.2/web-animations.min.js"></script>
     <script src="https://unpkg.com/muuri@0.9.3/dist/muuri.min.js"></script>
     <script src="{!! asset('js/main.js') !!}"></script>
-     <script src="{!! asset('js/pushbar.js') !!}">
- </script>
- <script src="{!! asset('js/mostrar.js') !!}">
- </script>
- <script>
-        var pushbar=new Pushbar({
-            blur:true,
-            overlay:true
+ 
 
-        });
 
-</script>
  @endsection

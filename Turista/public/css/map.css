@@ -7,3 +7,13 @@
     left: 50%;
     transform: translate(-50%, 0%);
 }
+
+@media only screen and (max-width: 800px) {
+	.leaflet-center .img_i{
+		width: 5vh;
+	}
+
+}
+.img_i{
+	width: 7vh;
+}
