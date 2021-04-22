@@ -215,7 +215,6 @@ return redirect()->to('/')->send();
         $var=request('max_var');
          $tipo="'".implode("','",session('tip'))."'";
          $vtp;
-        var_dump($mod);
         $consult=DB::select('select factor.id_factor,poi.id_poi,poi.nombre as pn,factor.nombre,max(poi_factor.valor) as valor,poi.tiempoestancia,poi.coordenadax,poi.coordenaday,imagen
           from poi,formula,poi_factor,factor,factor_variable
           where poi.id_poi=poi_factor.fk_id_poi
