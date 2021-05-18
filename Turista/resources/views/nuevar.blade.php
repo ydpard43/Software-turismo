@@ -1,13 +1,22 @@
 @extends('status')
 @section('title','Nueva ruta')
 @section('content')
+        @if(isset($msg))
+                <div class="alert alert-danger alert-dismissible fade show" id="myAlert" role="alert">
+            <strong>{{$msg}}</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" onclick="cerrar()" aria-label="Close"></button>
+        </div>
+         @endif
+        @if(session('status'))
+        <div class="alert alert-danger alert-dismissible fade show" id="myAlert" role="alert">
+            <strong>{{session('status')}}</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="alert" onclick="cerrar()" aria-label="Close"></button>
+              </div>
+        @endif
 <div class="card">
     <div class="card-body">
         <h2 class="card-title titulo" style="text-align: center;">Nueva ruta</h2>
         <h5 style="margin-bottom: 10px;">Seleccione las tipologias</h5>
-        @if(session('status'))
-            {{session('status')}}
-        @endif
         <form action="{{route('nuevar')}}" method="POST">
             @csrf
         <div id="datos">
@@ -21,7 +30,6 @@
                     @foreach($tp as $t)
                     <tr>
                       <td><input style="margin-top: -7px; " type="checkbox" name="tip[]" value="{{$t->nombre}}">   {{$t->nombre}}</td>
-                      
                     </tr>
                      @endforeach
                 </tbody>
@@ -32,8 +40,7 @@
         <hr>
          <div class="text-center">
             <span style="color: #808080;">Tiempo disponible</span>
-
-            <input type="number" name="time" id="time" readonly required value="60"  min="60" max="500"style="width: 14%; padding-right: 0; padding-left: 0;text-align: center;" onkeypress="return valida(event)" class="" value="{{old('time')}}">
+            <input type="number" name="time" id="time" readonly required value="60"  min="60" max="500"style="width: 20%; padding-right: 0; padding-left: 0;text-align: center;" onkeypress="return valida(event)" class="" value="{{old('time')}}">
             {!!$errors->first('time','<span>:message</span>')!!}
             <span style="color: #808080;">Min</span>
             <input type="checkbox" id="check" checked>
@@ -55,13 +62,13 @@
             <option value="2">En bicicleta</option>
         </select>
         </div>
-<br>
-         <button type="submit" class="btn btn-primary btn-block mb-4">Siguiente</button>
+<div style="margin-top: 20px; text-align: right;">
+         <a class="btn btn-info  mb-3" href="{{route('home')}}">Volver al inicio</a>
+         <button type="submit" class="btn btn-primary mb-3">Siguiente</button>
+</div>
         </form>
-        <br>
     </div>
 </div>
-
 <script>
         function valida(e) {
             tecla = (document.all) ? e.keyCode : e.which; 
@@ -79,5 +86,11 @@
          $('#time').attr("readonly", false);
     }
 });
+</script>
+<script>
+     function cerrar(){
+    $('#myAlert').hide();
+   }
+
 </script>
 @endsection

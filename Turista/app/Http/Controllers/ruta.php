@@ -24,7 +24,7 @@ return redirect()->to('/')->send();
   $consult = DB::table('ruta')
           ->select('ruta.id_ruta','ruta.nombre')
           ->join('turista','turista.id_turista','=','ruta.fk_id_turista')
-          ->where('turista.id_turista','1')
+          ->where('turista.id_turista',session('id'))
           ->orderBy('ruta.id_ruta','asc')
           ->get();
   $consult2=DB::table('municipio')
@@ -83,12 +83,15 @@ return redirect()->to('/')->send();
 					->get();
 		return view('nuevar')->with('tp',$consult);
     }
-    public function nuevap2()
+
+    //Se envian las tipologias,el tiempo disponible y la modalidad de la ruta a la función llamada nuevap2
+    public function nuevap2() 
     {
     	$tipol=request('tip');
     	$t=request('time');
       $m=request('mod');
       $mod='';
+    //Se almacenan las preferencias
       if ($m=='0') {
       $mod='driving';
       }else if ($m=='1') {
@@ -96,6 +99,7 @@ return redirect()->to('/')->send();
       }else if ($m=='2') {
       $mod='cycling';
       }
+      //se crean las variables de sesión, en el caso que ya existan se destruyen las anteriores
     	if(isset($tipol) && isset($t)){
 	    	session(['tip' => $tipol]);
 		 	  session(['time' => $t]);
@@ -106,6 +110,7 @@ return redirect()->to('/')->send();
         session()->forget('mod');
 		 	return back()->with('status','Por favor rellene todos los campos');
     	}
+      //De acuerdo al tipo de delimitación el turista sera enviado a una pagina diferente
     	$d=request('del');
     	if ($d=='0') {
     		$consult=DB::table('municipio')
@@ -114,6 +119,7 @@ return redirect()->to('/')->send();
 					->join('poi','poi.fk_id_municipio','=','municipio.id_municipio')
 					->orderBy('nombre','asc')
 					->get();
+      //A la vista mun se envian todos los municipios registradas en el sistema
     	return view('mun')->with('mun',$consult);
     	}else if ($d=='1') {
     		$consult=DB::select("select poi.id_poi,poi.nombre,string_agg(tipologia.nombre,',') as tipologia ,poi.coordenadax,poi.coordenaday,imagen as img
@@ -140,9 +146,11 @@ return redirect()->to('/')->send();
 
     		$a = array_values(array_map("unserialize", array_unique(array_map("serialize", $s))));
     		$count=1;
+    //A la vista map se envia el nombre,la coordenadas y las imagenes de todos los puntos que cumplan con las tipologias seleccionadas
 		return view('map')->with('pois',$a);
     	}
     }
+
     public function nuevap3()
     {
      $mun=request('mun');
@@ -161,6 +169,7 @@ return redirect()->to('/')->send();
 				group by poi.id_poi
 				order by poi.id_poi asc");
     		$sitios;
+
     	foreach ($consult as $value) {
     	$sitios[]=$value->id_poi;
     	}
@@ -172,13 +181,13 @@ return redirect()->to('/')->send();
         session()->forget('sitios');
 	    session(['sitios' => $sit]);
 		}
-              $consult2=DB::table('formula')
+      $consult2=DB::table('formula')
         		 ->select('id_formula','nombre')
              ->where('estado','true')
         		 ->get();
-        return view('ecu')->with('f',$consult2);
+       return view('ecu')->with('f',$consult2);
     	}else{
-                $consult=DB::table('municipio')
+        $consult=DB::table('municipio')
           ->select('municipio.nombre')
           ->distinct()
           ->join('poi','poi.fk_id_municipio','=','municipio.id_municipio')
@@ -188,9 +197,13 @@ return redirect()->to('/')->send();
        
       }
     }
+    // En el caso de seleccionar delimitación por municipios, se filtaran los puntos de interes de acuerdo a las tipologias y a los municipios establecidos, por el contrario si selecciono delimitación en el mapa se recolectaran los PoIs dentro del area establecida
         public function nuevap3b()
     {
         $sitios=request('pois');
+        if (count(explode(',', $sitios) )<2) {
+            return back()->with('status','La selección actual no proporciona la cantidad minima de sitios para crear una ruta');
+        }
         if(isset($sitios)){
 	    	session(['sitios' => $sitios]);
     	}else{
@@ -201,8 +214,10 @@ return redirect()->to('/')->send();
              ->select('id_formula','nombre')
              ->where('estado','true')
              ->get();
+    //se envia las ecuaciones disponible a la siguiente pagina
     return view('ecu')->with('f',$consult);
     }
+    //Se recolectan los valores asignados a la formula de ponderación empleada y se evaluan los puntos de interes
     public function nuevap4()
     {
         $sitios=session('sitios');
@@ -264,6 +279,7 @@ return redirect()->to('/')->send();
         if (count($consult)==0) {
           return view('home');
         }
+        // Se guarda el numero de tipologias cumplicadas por cada poi
         foreach ($consult2 as $key ) {
           $vtp[$key->id_poi]=$key->t;
         }
@@ -298,6 +314,7 @@ return redirect()->to('/')->send();
  
    $pos=$pos+1;
  }
+ //En el caso de no encontrar ninguna variable asociada a los PoIs solamente se multiplican los factores por sus valores
 }else if(strlen(stristr($value->vn,'NTP'))==0){
    if ($value2->valor*$pesos2[$pos]>$var[$max]) {
     $resvar[$value2->id_poi]=$resvar[$value2->id_poi]+(int)$var[$max];
@@ -400,6 +417,7 @@ if ($value2->id_poi==$ut) {
         }
 
     }
+  //Se ordena de mayor a menor el puntaje obtenido por cada punto de interes y se restan los tiempos de estancia
    arsort($resultado);
    $res;
   foreach ($resultado as $key => $value) {
@@ -410,16 +428,19 @@ if ($value2->id_poi==$ut) {
   foreach ($res as $key=>$value) {
  
  if ($key==0) {
+ 
  if ($tt-$tiempo[$value]['tiempo']>=0) {
     $tt=$tt-$tiempo[$value]['tiempo'];
     $pp[]=$value;
     $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
  }
  }else{
+    if (!isset($coor1)) {
+     $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx']; 
+    }
     $coor2=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
     $data = file_get_contents('https://api.mapbox.com/optimized-trips/v1/mapbox/'.$mod.'/'.$coor1.';'.$coor2.'?access_token=pk.eyJ1IjoidHVyaXN0cm91dGUiLCJhIjoiY2tuYjY3N2t4MDR5MjJ2cGhyYjFibGc1YSJ9.VhhVvZdDGKvZG75AhvHWsw', null, stream_context_create([
                 'http' => [
-                'protocol_version' => 1.1,
                 'header'           => [
                 'Connection: close',],],]));
      $data=json_decode($data);
@@ -432,8 +453,22 @@ $coor1=$tiempo[$value]['cy'].",".$tiempo[$value]['cx'];
 }
   }
  
+ if (count($pp)=='1') {
+      $consult=DB::table('tipologia')
+          ->select('nombre')
+          ->distinct()
+          ->join('poi_tipologia','poi_tipologia.fk_id_tipologia','=','tipologia.id_tipologia')
+          ->orderBy('nombre','asc')
+          ->where('poi_tipologia.estado','1')
+          ->get();
+          return view('nuevar')->with('tp',$consult)->with('msg','El tiempo no es suficiente, intente de nuevo con otras preferencias');
+ }else{
+//Finalmente se envian los puntos de interes que pueden ser recorridos de acuerdo al tiempo disponible, y se muestra la siguiente vista
 return view('rutat')->with('pun',$pp)->with('t',$tiempo);
+ }
     }
+
+    // De acuerdo al punto de partidad selecionado se creara la ruta
     public function nuevap5()
     {
     	$sitios=request('pois');
@@ -458,9 +493,9 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
         if ($a==$b) {
         $pois[$a][$b]=-1;
         }else{
+        // se arma la tabla de distancias con todos los puntos de interes que pasaron los filtros anteriores
         $data = file_get_contents('https://api.mapbox.com/optimized-trips/v1/mapbox/'.$mod.'/'.$cd[$a].';'.$cd[$b].'?access_token=pk.eyJ1IjoidHVyaXN0cm91dGUiLCJhIjoiY2tuYjY3N2t4MDR5MjJ2cGhyYjFibGc1YSJ9.VhhVvZdDGKvZG75AhvHWsw', null, stream_context_create([
                 'http' => [
-                'protocol_version' => 1.1,
                 'header'           => [
                 'Connection: close',],],]));
         $data=json_decode($data);
@@ -512,6 +547,7 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
     } 
 
     $a=0;
+  // Luego de eliminar de la tabla de distancias los caminos mas largos,se envia la matriz al metodo formar_posi
   $this->lista_rutas[] = new route();
   $this->n_poi=count($poi);
   $this->poi=$poi;
@@ -531,12 +567,12 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
         }
         
       $this->formar_posi($x=Array(),$y=Array(), 0, "0");
-     
+     //Finalmente envia al recorrido a la siguiente vista
       $result=$this->rutas_aptas();
        return view('guardarr')->with('rt',$result)->with('p',$this->pn);
 
             }
-
+ //Se recogen la ruta seleccionada y se calcula la distancia y el tiempo de la ruta
   public function nuevap6()
   {
     $sitios=request('indice');
@@ -568,10 +604,9 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
        }else{
        
           $poi_actual=$cd[$value];
-         
+         //El tiempo y las distancias son obtenidos enviando las coordenadas a la api de mapbos
             $data = file_get_contents('https://api.mapbox.com/optimized-trips/v1/mapbox/'.$mod.'/'.$poi_anterior.';'.$poi_actual.'?access_token=pk.eyJ1IjoidHVyaXN0cm91dGUiLCJhIjoiY2tuYjY3N2t4MDR5MjJ2cGhyYjFibGc1YSJ9.VhhVvZdDGKvZG75AhvHWsw', null, stream_context_create([
                 'http' => [
-                'protocol_version' => 1.1,
                 'header'           => [
                 'Connection: close',],],]));
         $data=json_decode($data);
@@ -582,10 +617,12 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
 
        } 
        }
-    
+     // Se envian los datos de la ruta a la siguiente vista
       return view('guardarrp2')->with('time',$time)->with('total',$sum)->with('poi',$poi)->with('nombres',$nombres)->with('costo',$costo);
 
   }
+
+  //Se recogen los datos de la ruta(Orden la ruta,distancia, tiempo, costo) y se guardan en la base de datos
   public function nuevap7()
   {
     $ruta=request('poi');
@@ -605,7 +642,7 @@ return view('rutat')->with('pun',$pp)->with('t',$tiempo);
     $point=[];
     $consult=DB::table('ruta')
               ->select(DB::raw('MAX(id_ruta) as id'))
-              ->where('fk_id_turista','1')
+              ->where('fk_id_turista',session('id'))
               ->get();
  if ($consult) {
 $consult2=DB::table('ruta')->insert([
@@ -667,12 +704,12 @@ and formula.id_formula='.$id.'
 and formula.estado=true
 and formula.id_formula=factor.fk_id_formula '); 
   }
+  // En el metodo formar_posi se calculan todas las rutas posibles y se retorna la mas óptima
    public function formar_posi($recorrido,$valor,$poi_anterior,$val_anterior)
     {
         $recorrido[]=$poi_anterior;                            
         $valor[]=$val_anterior;
         if(count($recorrido)==$this->n_poi){
-
             $res[]=0;
             $r = new route();
             foreach ($recorrido as $iterador=>$key){
@@ -698,8 +735,7 @@ and formula.id_formula=factor.fk_id_formula ');
                $this->formar_posi($reco=unserialize(serialize($recorrido)),
                 $val=unserialize(serialize($valor)),$this->poi_conectados[$recorrido[$cont]+1]->getConexiones()[$i],
                 "".$this->poi_conectados[$recorrido[$cont]+1]->getValor()[$i]);
-              }
-          
+              } 
           }
 
           }
@@ -762,7 +798,7 @@ and formula.id_formula=factor.fk_id_formula ');
     public function verr2()
     {
       $id=request('id_ruta');
-      $consult=DB::select('select ruta.id_ruta,ruta.modalidad,ruta.fk_id_turista,ruta.minutos,ruta.hora,ruta.segundos,poi.id_poi,poi.coordenadax,poi.coordenaday,poi.nombre,poi.imagen,poi_ruta.estado from ruta,poi_ruta,poi,turista where ruta.fk_id_turista=turista.id_turista and poi_ruta.fk_id_ruta=ruta.id_ruta and poi_ruta.fk_id_poi=poi.id_poi and ruta.id_ruta='.$id.' order by poi_ruta.orden');
+      $consult=DB::select('select ruta.id_ruta,ruta.nombre as r_n,ruta.modalidad,ruta.fk_id_turista,ruta.minutos,ruta.hora,ruta.segundos,poi.id_poi,poi.coordenadax,poi.coordenaday,poi.nombre,poi.imagen,poi_ruta.estado from ruta,poi_ruta,poi,turista where ruta.fk_id_turista=turista.id_turista and poi_ruta.fk_id_ruta=ruta.id_ruta and poi_ruta.fk_id_poi=poi.id_poi and ruta.id_ruta='.$id.' order by poi_ruta.orden');
       return $consult;
     }
        public function actuareco()

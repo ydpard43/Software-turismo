@@ -1,9 +1,15 @@
- 	 var estiloPopup = {'maxWidth': '300'};
+ 	 var estiloPopup = {'maxWidth': '200','maxHeigth':'200'};
  	 var sitios=[];
  	 var radio;
+   var mark_pos = L.icon({
+    iconUrl: 'img/marcador-de-posicion.png',
+    iconSize:     [35, 35], 
+    iconAnchor:   [28, 28], 
+    popupAnchor:  [-6,-20] 
+});
  	 for (var i = 0; i < app.length; i++) {
- 	 L.marker([app[i]['coordenadax'],app[i]['coordenaday']],{draggable: false})
-   .bindPopup("<h1 style='text-align:center;'>"+app[i]['nombre']+"</h1><p><img style='width:100%;' src='img/"+app[i]['img']+"'></p>",estiloPopup).addTo(map);
+ 	 L.marker([app[i]['coordenadax'],app[i]['coordenaday']],{icon:mark_pos,draggable: false})
+   .bindPopup("<h3 style='text-align:center;'>"+app[i]['nombre']+"</h3><p><img style='width:100%;' src='img/"+app[i]['img']+"'></p>",estiloPopup).addTo(map);
  	 }
 
  map.on(L.Draw.Event.CREATED, function (e) {
@@ -97,7 +103,11 @@ return d;
 
 
 L.easyButton('<img src="img/enviar.png" style="width:15px;">', function(btn, map){
+
 $('#pois').val(sitios);
+if(sitios.length > 1){
 document.formulario.submit();
+}else{
+  alert('Para la crear una ruta debe seleccionar mas de un punto de interes');
+}
 }).addTo(map);
-  console.clear(); 

@@ -1,5 +1,10 @@
 @extends('status')
 @section('title','Guardar ruta')
+@if(!isset($poi))
+@php
+return redirect()->to('/')->send();
+@endphp
+@endif
 @section('parts')
  <meta name="csrf-token" content="{{ csrf_token() }}" />
 @endsection
@@ -10,7 +15,9 @@
         
         <form action="{{route('guardarrp2')}}" onsubmit="funcionSubmit(event)" method="POST">
           <h5 style="margin-bottom: 10px;">Datos del recorrido</h5>
+          @if(session()->has('name'))
           Nombre de la ruta: <input required minlength="4" maxlength="20" type="text" id="name">
+          @endif
           <br>
         <h7 style="margin-bottom: 10px;">Puntos de interes</h7>
         @if(session('status'))
@@ -36,6 +43,11 @@
           </div>
         </div>
         <br>
+
+         Modalidad: @if(session('mod')=='driving') Carro @endif @if(session('mod')=='walking') Pie @endif
+         @if(session('mod')=='cycling') Cicla @endif
+        
+        <br>
         Distancia total: {{round($total,2)}} km
         <br>
         Tiempo aproximado: {{$time}} min
@@ -44,7 +56,9 @@
         <div style="text-align: right; display: block; width: 100%;">
             <br>
         <a type="button" class="btn btn-danger " href="{{route('nuevar')}}">Volver al inicio</a>
+        @if(session()->has('name'))
          <button type="submit" class="btn btn-primary ">Guardar</button>
+         @endif
         </div>
 
         </form>

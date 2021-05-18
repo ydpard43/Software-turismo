@@ -49,39 +49,19 @@ return redirect()->to('/')->send();
             <div class="form-outline">
               <input style="background:#f1f1f1; " data-mdb-showcounter="true" minlength="2" 
                 maxlength="10" required onkeypress="return validate(event)" type="text" value="{{old('primern')}}" id="pn" class="form-control" name="primern" />
-              <label class="form-label" for="pn">1° nombre</label>
+              <label class="form-label" for="pn">Nombre</label>
                <div class="form-helper"></div>
             </div>
           </div>
-          <div class="col">
-            <div class="form-outline">
-              <input style="background:#f1f1f1; " minlength="0" 
-                maxlength="10" data-mdb-showcounter="true" onkeypress="return validate(event)" type="text" value="{{old('primern')}}" type="text" id="sn" name="segundon" value="{{old('segundon')}}" class="form-control" />
-              <label class="form-label" for="sn">2° nombre</label>
-               <div class="form-helper"></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="row mb-4">
-          <div class="col">
+                    <div class="col">
             <div class="form-outline">
               <input style="background:#f1f1f1; " minlength="2" 
                 maxlength="10" required data-mdb-showcounter="true" onkeypress="return validate(event)" type="text" value="{{old('primern')}}" type="text" id="pa" value="{{old('primera')}}" name="primera"class="form-control" />
-              <label class="form-label" for="pa">1° apellido</label>
-               <div class="form-helper"></div>
-            </div>
-          </div>
-          <div class="col">
-            <div class="form-outline">
-              <input style="background:#f1f1f1; "data-mdb-showcounter="true" required  minlength="2" 
-                maxlength="10" onkeypress="return validate(event)" type="text" value="{{old('primern')}}"type="text" id="sa" value="{{old('segunda')}}" name="segunda" class="form-control" />
-              <label class="form-label" for="sa">2° apellido</label>
+              <label class="form-label" for="pa">Apellido</label>
                <div class="form-helper"></div>
             </div>
           </div>
         </div>
-
         <div class="row mb-4">
           <div class="col">
             <div class="form-outline">

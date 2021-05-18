@@ -5,9 +5,13 @@ var minutes = 0;
 var hora=0; 
 var band=0;
 var estiloPopup = {'maxWidth': '300'};
-var control; 
+var control;
+var control2; 
 var n; var points; 
 var pointa; 
+var point_mr=[];
+point_mr.push(1);
+point_mr.push(2);
 var nm; 
 var img; 
 var estado;
@@ -107,7 +111,9 @@ n.addEventListener('change',
     success: function(result){
 if (!(typeof control =='undefined')) {
      control.spliceWaypoints(0,n);
+     control2.spliceWaypoints(0,2);
      map.removeControl(control);
+     map2.removeControl(control2);
      Stop();
      $.ajax({
     type:"POST",
@@ -146,10 +152,10 @@ for (var i = 0; i < result.length; i++) {
     pointa.push([result[i]['coordenadax'],result[i]['coordenaday']]);
 }
 }
-
-
+point_mr[1]=pointa[0];
  document.getElementById("porcent").innerHTML =(1-(pointa.length/result.length))*100+"%";
  document.getElementById('restantes').innerHTML=pointa.length;
+  $('#verr_ind').attr('href','detalle/'+result[0]['r_n']);
 n=points.length;
 control = L.routing.control({
     waypoints: points,
@@ -169,6 +175,23 @@ control = L.routing.control({
         icon: check
       }).bindPopup("<h5 style='text-align:center;'>"+nm[i]+"</h5>Recorrido<p><img style='width:100%;' src='img/"+img[i]+"'></p>",estiloPopup);}}
 }).addTo(map);
+control2 = L.routing.control({
+    waypoints: point_mr,
+    router:new L.Routing.mapbox('pk.eyJ1IjoidHVyaXN0cm91dGUiLCJhIjoiY2tuYjZmODViMDJmMjJvcnoyemVrenJqNiJ9.oiOBAjvJwskXLdPMIsUsFg',{language: 'es',}),
+     routeWhileDragging: false,
+      language:'es',
+     addWaypoints: false,
+      collapsible: true,
+      profil:moda,
+      createMarker: function(i, wp, nWps) {
+    if (i==1) {
+      return L.marker(wp.latLng,{icon: icon(0)}).bindPopup("<h5 style='text-align:center;'>"+nm[i]+"</h5 ><p><img style='width:100%;' src='img/"+img[i-1]+"'></p>",estiloPopup);
+    }else{
+     return L.marker(wp.latLng,{icon:pos}).bindPopup("<h5>Mi posición</h5>",estiloPopup);
+    }
+    }
+}).addTo(map2);
+
 poi_ant=selectedOption;
        },
     error: function(){
@@ -200,12 +223,18 @@ poi_ant=selectedOption;
                }}
      }}
       posicion = L.marker(e.latlng,{icon: pos}).bindPopup("<h5>Mi posición</h5>").addTo(map);
+      point_mr[0]=e.latlng;
       
     }
     map.on('locationfound', onLocationFound); 
+    //map.on('locationerror', onLocationError);
+  function onLocationError(e) {
+    alert(e.message);
+  }
     function locate() {
       map.locate({setView: false});
     }
+
     setInterval(locate, 3000);
      getKilometros = function(lat1,lon1,lat2,lon2)
  {

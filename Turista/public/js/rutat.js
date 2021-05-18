@@ -1,4 +1,4 @@
-var estiloPopup = {'maxWidth': '300'};
+var estiloPopup = {'maxWidth': '200','maxHeigth':'200'};
 var sitios=[];
 var mark_pos = L.icon({
     iconUrl: 'img/marcador-de-posicion.png',

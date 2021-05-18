@@ -1,9 +1,13 @@
 @extends('status')
 @section('parts')
 @include('routes')
+@if(!isset($pun))
+@php
+return redirect()->to('/')->send();
+@endphp
+@endif
 @endsection
 @section('title','Nueva ruta')
-
 @section('content')
 <style>
     .leaflet-routing-container-hide {display: none;}
@@ -19,11 +23,11 @@
                       <h5>Para establecer el primer punto de la ruta debe seguir los siguientes pasos</h5>
                       <h6>1.Primero seleccione un marcador en el mapa</h6>
                       <div class="guia">
-                      <img src="img/screen1.jpg">
+                      <img style="width:70%" src="img/screen1.jpg">
                       </div>
                       <p>Al dar click sobre el vera información relevante acerca del punto de interes pulsado</p>
                       <div class="guia">
-                      <img src="img/screen2.jpg">
+                      <img style="width:70%" src="img/screen2.jpg">
                       </div>
                       <br>
                       <h6>2.Pulse el boton que contiene el texto 'Punto de partida'</h6>

@@ -15,5 +15,15 @@ var result=@json(session()->has('nombre'));
 </script>
 <script src="{!! asset('js/map.js') !!}">
 </script>
+
 <script src="{!! asset('js/rutar.js') !!}"></script>
+@if(session()->has('nombre'))
+<script src="{!! asset('js/minir.js') !!}"></script>
+@endif
+<script>
+function askConfirmation (evt) {
+  alert('chao');
+}
+window.addEventListener('beforeunload', askConfirmation);
+</script>>
 @endsection

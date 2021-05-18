@@ -3,9 +3,12 @@
 @include('routes')
 @endsection
 @section('title','iniciar')
-
 @section('content')
-   
+@if(!isset($pois))
+@php
+return redirect()->to('/')->send();
+@endphp
+@endif
    <div id="map"></div>
    <form  action="{{route('map')}}" name="formulario" method="POST">
    	@csrf

@@ -1,6 +1,11 @@
 @extends('status')
 @section('title','Detalles de la ruta')
 @section('content')
+@if(!session()->has('nombre'))
+@php
+return redirect()->to('/')->send();
+@endphp
+@endif
 <div class="card">
     <div class="card-body">
         <h2 class="card-title titulo" style="text-align: center;">{{$ruta[0]->nombre}}</h2>
@@ -86,7 +91,7 @@ var token = '{{csrf_token()}}';
     }
 });
   }else{
-    alert('EL nombre de la ruta no puede esta vacio');
+    alert('El nombre de la ruta no puede esta vacio');
   }
 
  }

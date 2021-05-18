@@ -1,7 +1,7 @@
 @extends('status')
 @section('title',$poi[0]->nomp)
 @section('content')
- @include('partials.nav3')
+ @include('partials.nav2')
  @php
  $a[0]=0;
  $c=5-$estrellas;
@@ -185,19 +185,6 @@
         </div>
 
       </div>
-
-    <script src="{!! asset('js/main.js') !!}"></script>
-     <script src="{!! asset('js/pushbar.js') !!}">
- </script>
- <script src="{!! asset('js/mostrar.js') !!}">
- </script>
- <script>
-        var pushbar=new Pushbar({
-            blur:true,
-            overlay:true
-
-        });
-</script>
 <!-- MDB -->
 <script
   type="text/javascript"

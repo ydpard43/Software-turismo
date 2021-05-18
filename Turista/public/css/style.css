@@ -194,7 +194,7 @@ label:hover ~ label{color:orange;}
   width: 5vh;
   bottom: 110%;
   position: absolute;
-  right: 38%;
+  right: 41%;
 }
 @media (max-width: 600px) {
   .card {

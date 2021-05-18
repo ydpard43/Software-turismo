@@ -10,16 +10,14 @@ class regis extends Controller
 {
   public function store(){
       $prn=request('primern');
-      $sgn=request('segundon');
       $pra=request('primera');
-      $sga=request('segunda');
       $pas=request('password');
       $email=request('email');
       $sex=request('sexo');
       $alias=request('nomu');
       if ($sex=='-1') {
       return back()->with('status','Seleccione un genero');
-      }else if (empty($prn) || empty($sgn) || empty($pra) || empty($sga) || empty($pas) || empty($email)) {
+      }else if (empty($prn) || empty($pra) || empty($pas) || empty($email) || empty($alias)) {
        return back()->with('status','Por favor rellene todos los campos');
       }
       $ver_alias=Turista::select('alias')
@@ -43,9 +41,7 @@ class regis extends Controller
     if ($mayuscula && $numeros && $minuscula) {
       $consult=Turista::create([
       'prnombre'=> $prn,
-      'sgnombre'=> $sgn,
       'prapellido'=> $pra,
-      'sgapellido'=> $sga,
       'alias'=> $alias,
       'contrasena'=> rtrim(strtr(base64_encode($pas), '+/', '-_'), '='),
       'sexo'=> $sex,

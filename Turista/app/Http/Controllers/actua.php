@@ -19,9 +19,7 @@ class actua extends Controller
  public function actuap()
  {
  	$prn=request('primern');
-    $sgn=request('segundon');
-    $pra=request('primera');
-    $sga=request('segunda');
+  $pra=request('primera');
     $email=request('email');
     $alias=request('nomu');
     $sexo=request('sexo');
@@ -34,7 +32,7 @@ if (!empty($ruta)) {
 }else{
   $img='df.jpg';
 }
-  if (empty($prn) || empty($sgn) || empty($pra) || empty($sga) || empty($email)) {
+  if (empty($prn)  || empty($pra) || empty($email) || empty($alias)) {
        return back()->with('status','Por favor rellene todos los campos');
       }
     $ver_alias=Turista::select('alias')
@@ -55,9 +53,7 @@ if (!empty($ruta)) {
  	$consult= Turista::where('id_turista',session('id'))
  				             ->update(['alias'=>$alias,
  					                      'prnombre'=>$prn,
- 					                      'sgnombre'=>$sgn,
  					                      'prapellido'=>$pra,
- 					                      'sgapellido'=>$sga,
  					                      'sexo'=>$sexo,
  					                      'imagen'=>$img,
  					                      'correo'=>$email

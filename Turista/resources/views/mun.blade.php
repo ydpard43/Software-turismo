@@ -1,7 +1,11 @@
 @extends('status')
 @section('title','Delimitacion')
-
 @section('content')
+@if(!isset($mun))
+@php
+return redirect()->to('/')->send();
+@endphp
+@endif
 <div class="card">
     <div class="card-body">
         <h2 class="card-title titulo" style="text-align: center;">Nueva ruta</h2>

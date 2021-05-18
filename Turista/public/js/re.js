@@ -15,7 +15,7 @@ if (band==0) {
     data:{email:$('#correo').val()},
     success: function(re){
       if (re.length>0) {
-          var letrasaceptadas = new Array('a', 'b', 'c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','x','y','z');
+var letrasaceptadas = new Array('a', 'b', 'c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','x','y','z');
 var numerosaceptados = new Array('1', '2', '3','4','5','6','7','8','9','10','11','12');
 var combinacionl="";
 var combinacionn="";

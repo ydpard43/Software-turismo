@@ -1,5 +1,10 @@
 @extends('status')
 @section('title','Guardar ruta')
+@if(!isset($rt))
+@php
+return redirect()->to('/')->send();
+@endphp
+@endif
 @section('content')
 <div class="card">
     <div class="card-body">

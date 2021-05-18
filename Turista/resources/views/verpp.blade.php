@@ -1,6 +1,7 @@
 @extends('status')
 @section('title','Mi perfil')
 @section('content')
+
 <div class="card text-center">
     <div class="card-body" style="background: linear-gradient(180deg, rgba(0,215,255,1) 30%, rgba(255,255,255,1) 30%); border-radius: 25px;">
         <h1 id="title" style="color: white;">Perfil</h1>
@@ -12,7 +13,6 @@
         <img style="width: 200px; height: 200px; border-radius: 100px; margin-bottom: 13px;" id="imagen" src="img/{{$turista->imagen}}">
         <input style='display: none;' accept="image/*" id="archivo" type="file" name="img" onchange="loadImage(event)">
         </div>
-        
             @csrf
         <div class="row mb-4">
           <div class="col">
@@ -37,36 +37,18 @@
             <div class="form-outline">
               <input style="background:#f1f1f1; " data-mdb-showcounter="true" minlength="2" 
                 maxlength="10" required onkeypress="return comprobar(event)" type="text" value="{{$turista->prnombre}}" id="pn" class="form-control" name="primern" />
-              <label class="form-label" for="pn">1° nombre</label>
+              <label class="form-label" for="pn">Nombre</label>
               <div class="form-helper"></div>
             </div>
           </div>
-          <div class="col">
-            <div class="form-outline">
-              <input style="background:#f1f1f1; " minlength="0" 
-                maxlength="10" data-mdb-showcounter="true" onkeypress="return comprobar(event)" type="text"  type="text" id="sn" name="segundon" value="{{$turista->sgnombre}}" class="form-control" />
-              <label class="form-label" for="sn">2° nombre</label>
-              <div class="form-helper"></div>
-            </div>
-          </div>
-        </div>
-           <div class="row mb-4">
-          <div class="col">
+        <div class="col">
             <div class="form-outline">
               <input style="background:#f1f1f1; " data-mdb-showcounter="true" minlength="2" 
                 maxlength="10" required onkeypress="return comprobar(event)" type="text"  type="text" id="pa" value="{{$turista->prapellido}}" name="primera"class="form-control" />
-              <label class="form-label" for="pa">1° apellido</label>
+              <label class="form-label" for="pa">Apellido</label>
               <div class="form-helper"></div>
             </div>
-          </div>
-          <div class="col">
-            <div class="form-outline">
-              <input style="background:#f1f1f1; " data-mdb-showcounter="true" minlength="2" 
-                maxlength="10"  required onkeypress="return comprobar(event)" type="text" type="text" id="sa" value="{{$turista->sgapellido}}" name="segunda" class="form-control" />
-              <label class="form-label" for="sa">2° apellido</label>
-              <div class="form-helper"></div>
-            </div>
-          </div>
+        </div>
         </div>
         <div class="row mb-4">
                   <div class="col">
@@ -86,20 +68,17 @@
      </div>
  </div>
 
-
-        <div class="regist">
-        <button class="btn btn-primary"  type="submit">Actualizar</button>
-         <a class="btn btn-primary"   href="{{route('actualizar')}}">Cambiar contraseña</a>
+        <div class="regist" style="text-align: right;">
+        <a class="btn btn-primary" style="margin-bottom: 10px;" href="{{route('home')}}">Volver</a>
+        <button class="btn btn-info" style="margin-bottom: 10px;" type="submit">Actualizar</button>
+         <a class="btn btn-success" style="margin-bottom: 10px;"  href="{{route('actualizar')}}">Cambiar contraseña</a>
         </div>
         <br>
     
             </form>
            </div>
 </div>
-<script
-  type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.js"
-></script>
+
 <script>
 $('#imagen').click(function(event) {
     $('#archivo').click();
@@ -117,4 +96,8 @@ $('#imagen').click(function(event) {
             return patron.test(check); 
         }
 </script>
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.2.0/mdb.min.js"
+></script>
 @endsection

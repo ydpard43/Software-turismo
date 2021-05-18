@@ -1,5 +1,10 @@
 @extends('status')
 @section('title','Nueva ruta')
+@if(!isset($f))
+@php
+return redirect()->to('/')->send();
+@endphp
+@endif
 @section('parts')
  <meta name="csrf-token" content="{{ csrf_token() }}" />
  <link rel="stylesheet" type="text/css" href="css/number.css">
